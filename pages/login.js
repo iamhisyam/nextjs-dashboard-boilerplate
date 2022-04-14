@@ -1,6 +1,6 @@
 import { Login } from "@/page-components/Auth"
 import Head from "next/head"
-import Image from "next/image"
+
 
 const LoginPage = () => {
     return (
@@ -10,8 +10,6 @@ const LoginPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Login/>
-            
-
         </div>
     )
 

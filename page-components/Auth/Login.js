@@ -1,5 +1,8 @@
 import { useSpringCarousel } from "react-spring-carousel"
 import { useEffect, useState } from "react";
+import { TextInput, Checkbox, Grid, Center, Button } from "@mantine/core";
+import { useForm } from '@mantine/form';
+import { Space } from "tabler-icons-react";
 
 
 
@@ -26,7 +29,8 @@ const dataSlider = [
 
 const Slider = () => {
 
-    const [activeSlide,setActiveSlide] = useState(0)
+    const [activeSlide, setActiveSlide] = useState(0)
+
 
     const {
         carouselFragment,
@@ -41,7 +45,7 @@ const Slider = () => {
             id,
             renderItem: (
                 <div className="flex flex-col w-full items-center">
-                    <img className="mb-4" src={item.image}/>
+                    <img className="mb-4" src={item.image} />
                     <p className="text-xs sm:text-base  font-bold">{item.title}</p>
                     <p className="text-xs sm:text-sm ">{item.description}</p>
                 </div>
@@ -58,40 +62,41 @@ const Slider = () => {
 
 
     return (
-        <div className="flex flex-col">
-            <div className=" text-white overflow-hidden">
+        <div className="hidden md:flex  md:flex-col ">
+            <div className="  text-black ">
                 {carouselFragment}
             </div>
 
-            <div className="flex flex-row text-white justify-center gap-4 mt-4">
-                <button onClick={()=>{
-                    setActiveSlide(getCurrentActiveItem().index-1)
-                    slideToPrevItem()}} className="hover:text-gray-300">
+            <div className="flex flex-row text-black justify-center gap-4 mt-4">
+                <button onClick={() => {
+                    setActiveSlide(getCurrentActiveItem().index - 1)
+                    slideToPrevItem()
+                }} className="hover:text-gray-300">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                 </button>
                 <div className="flex flex-row items-center gap-1">
                     {/* {thumbsFragment} */}
-                    {dataSlider.map((item,id)=>{
-                     if(getIsActiveItem(id))   
-                        return <button key={id} onClick={()=>{
-                            setActiveSlide(id);
-                            slideToItem(id)
-                        }} className="h-2 w-2 mx-1 rounded-full bg-white" />
-                    else
-                    return <button key={id} onClick={()=>{
-                        setActiveSlide(id);
-                        slideToItem(id)
-                    }} className="h-2 w-2 mx-1 rounded-full bg-gray-400" />
+                    {dataSlider.map((item, id) => {
+                        if (getIsActiveItem(id))
+                            return <button key={id} onClick={() => {
+                                setActiveSlide(id);
+                                slideToItem(id)
+                            }} className="h-2 w-2 mx-1 rounded-full bg-black" />
+                        else
+                            return <button key={id} onClick={() => {
+                                setActiveSlide(id);
+                                slideToItem(id)
+                            }} className="h-2 w-2 mx-1 rounded-full bg-gray-800" />
 
-                })}
+                    })}
                 </div>
-                <button onClick={()=>{
+                <button onClick={() => {
                     slideToNextItem()
-                    setActiveSlide(getCurrentActiveItem().index+1)
-                    
-                    }} className="hover:text-gray-300">
+                    setActiveSlide(getCurrentActiveItem().index + 1)
+
+                }} className="hover:text-gray-300">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                     </svg>
@@ -103,9 +108,23 @@ const Slider = () => {
 }
 
 export const Login = () => {
+
+    const form = useForm({
+        initialValues: {
+            username: '',
+            password: '',
+            savePassword: false,
+        },
+
+        validate: {
+            username: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+        },
+    });
+
+
     return (
-        <div className="flex flex-col-reverse lg:flex-row h-screen min-h-screen ">
-            <div className="basis-5/6 md:basis-2/3 lg:basis-1/2  bg-white">
+        <div className="flex flex-col-reverse md:flex-row h-screen min-h-screen ">
+            <div className="basis-5/6 md:basis-1/2  bg-white">
                 <div className="flex flex-col justify-between h-full md:h-full">
                     <div className="basis-5/6  flex flex-col items-center justify-center h-full">
                         <div className="w-full px-8 py-8  sm:px-4 sm:w-auto">
@@ -118,26 +137,36 @@ export const Login = () => {
                             <div className="flex flex-col gap-5">
                                 <h1 className="text-3xl">Login</h1>
                                 <p className="text-base text-gray-500">Welcome back! please enter your details</p>
-                                <form className="flex flex-col gap-2">
-                                    <div className="form-control ">
-                                        <label htmlFor="username" className="text-xs">Email</label>
-                                        <input name="username" className="h-10 px-4 w-full rounded-md border border-gray-400 text-xs"  />
-                                    </div>
-                                    <div className="form-control ">
-                                        <label htmlFor="password" className="text-xs">Password</label>
-                                        <input name="password" className="h-10 px-4 w-full rounded-md border border-gray-400 text-xs" />
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <div className="inline-flex items-center gap-2">
-                                            <input name="savePassword" type="checkbox" className="h-10 px-4 rounded-md border border-gray-400 " />
-                                            <label htmlFor="savePassword" className="text-xs">Save Password</label>
-                                        </div>
-                                        <a className="text-xs" href="#">Forgot Password</a>
-                                    </div>
-                                    <button className="h-10 bg-blue-800 hover:bg-blue-900 text-sm text-white w-full rounded-md ">Sign in</button>
-                                    <div className="flex  justify-center text-xs mt-2">
-                                        <p>Don't have an Account? <a className="font-bold text-blue-800 hover:text-blue-900" href="#">SignUp</a></p>
-                                    </div>
+                                <form onSubmit={form.onSubmit((values) => console.log(values))} className="flex flex-col gap-2">
+
+                                    <TextInput
+                                        id="username"
+                                        label="Username"
+                                        placeholder="Username"
+                                        {...form.getInputProps('username')}
+                                        required />
+
+                                    <TextInput
+                                        type="password"
+                                        id="password"
+                                        label="Password"
+                                        placeholder="Password"
+                                        {...form.getInputProps('password')}
+                                        required />
+                                      
+                                    <Grid justify="flex-end" align="center" style={{marginBottom:6,padding:8}}>
+                                        <a className="text-xs font-bold text-blue-800 hover:text-blue-900" href="#">Forgot Password</a>
+                                    </Grid>
+                                    <Button 
+                                   
+                                    type="submit" >Login</Button>
+
+                                    <Center style={{marginTop:6,padding:8}}>
+                                        <p className="text-xs">Don't have an Account? <a className="font-bold text-blue-800 hover:text-blue-900" href="#">SignUp</a></p>
+                                    </Center>
+
+                                   
+
                                 </form>
 
                             </div>
@@ -148,9 +177,10 @@ export const Login = () => {
                     </div>
                 </div>
             </div>
-            <div className="basis-1/6 md:basis-1/3 lg:basis-1/2 bg-blue-900">
+            <div className="flex-1 basis-1/6 md:basis-1/2 bg-slate-200 overflow-hidden">
                 <div className="w-full h-full flex flex-col justify-center ">
                     <Slider />
+                    <p className="p-8 md:hidden text-2xl font-bold">New Dashboard</p>
                 </div>
 
             </div>
