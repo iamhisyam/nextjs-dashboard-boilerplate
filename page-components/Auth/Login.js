@@ -113,7 +113,9 @@ export const Login = () => {
         initialValues: {
             username: '',
             password: '',
+
         },
+
         validate: {
             username: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
         },
@@ -134,7 +136,7 @@ export const Login = () => {
                             <div className="flex flex-col gap-5">
                                 <h1 className="text-3xl">Login</h1>
                                 <p className="text-base text-gray-500">Welcome back! please enter your details</p>
-                                <form onSubmit={form.onSubmit((values) => console.log(values))} className="flex flex-col gap-2">
+                                <form onSubmit={form.onSubmit((values) => console.log(values))} className="flex flex-col gap-2" id="login-form">
                                     <TextInput
                                         id="username"
                                         label="Username"
