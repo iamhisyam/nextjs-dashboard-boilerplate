@@ -2,7 +2,7 @@ import '../assets/global.css'
 
 import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
-import { Template } from '@/components/Layout/Dashboard';
+import { Template } from '@/components/Dashboard/Layout';
 import { SessionProvider } from 'next-auth/react'
 
 function App({ Component, pageProps: { session, ...pageProps } }) {

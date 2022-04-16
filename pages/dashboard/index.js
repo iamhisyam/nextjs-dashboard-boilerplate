@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Header } from "@/components/Layout/Dashboard"
+import { Header } from "@/components/Dashboard/Layout"
 import { useSession, signIn, signOut } from "next-auth/react"
 
 const DashboardPage = () => {
