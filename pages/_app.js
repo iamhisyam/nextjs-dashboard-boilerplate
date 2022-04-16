@@ -3,8 +3,9 @@ import '../assets/global.css'
 import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
 import { Template } from '@/components/Layout/Dashboard';
+import { SessionProvider } from 'next-auth/react'
 
-function App({ Component, pageProps }) {
+function App({ Component, pageProps: { session, ...pageProps } }) {
     const hasLayout = Component.getLayout
     const getLayout = Component.getLayout || ((page) => page)
     return (
@@ -13,6 +14,7 @@ function App({ Component, pageProps }) {
                 <title>Page title</title>
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
             </Head>
+            <SessionProvider session={session}>
             <AppProvider>
                 {hasLayout && getLayout(
                     <Component {...pageProps} />
@@ -22,6 +24,7 @@ function App({ Component, pageProps }) {
                     </Template>
                 }
             </AppProvider>
+            </SessionProvider>
         </>
     )
 }
