@@ -1,15 +1,23 @@
 import Head from "next/head";
+import {Header} from "@/components/Layout/Dashboard"
 
-const DashboardPage = () => (
+const DashboardPage = () => {
+    const items = [
+        { title: " Dashboard", href: "#" },
+        { title: " Index", href: "#" },
+    ]
+    return (
     <>
+
         <Head>
             <title>Dashboard</title>
             <link rel="icon" href="/favicon.ico" />
         </Head>
+        <Header title="Dashboard" items={items} />
         <div>
-            <h1 className="text-xl">Dashboard</h1>
+           
         </div>
     </>
-)
+)}
 
 export default DashboardPage;

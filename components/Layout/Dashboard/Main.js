@@ -26,18 +26,18 @@ export default function Main({ children }) {
                 },
             }}
             navbarOffsetBreakpoint="sm"
-            asideOffsetBreakpoint="sm"
+            // asideOffsetBreakpoint="sm"
             fixed
             navbar={
                 <Navigation hidden={!opened} />
             }
-            aside={
-                <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-                    <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-                        <Text>Application sidebar</Text>
-                    </Aside>
-                </MediaQuery>
-            }
+            // aside={
+            //     <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+            //         <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
+            //             <Text>Application sidebar</Text>
+            //         </Aside>
+            //     </MediaQuery>
+            // }
             footer={
                 <Footer height={60} p="md">
                     <p className="text-xs text-gray-400  mb-4 ml-4">by <a className="text-blue-800" href="https://ahisyam.com"> ahisyam</a> @ 2022 All right reserved</p>

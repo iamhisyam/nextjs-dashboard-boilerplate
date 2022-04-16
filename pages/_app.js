@@ -33,6 +33,7 @@ const AppProvider = ({ children }) => (
         withNormalizeCSS
         emotionOptions={{ key: 'mantine', prepend: false }}
         theme={{
+            fontFamily: 'Poppins, sans-serif',
             /** Put your mantine theme override here */
             colors: {
                 //tailwind color
