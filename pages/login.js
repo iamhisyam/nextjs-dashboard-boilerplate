@@ -9,10 +9,15 @@ const LoginPage = () => {
                 <title>Login</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Login/>
+            <Login />
+
         </div>
     )
 
 }
 
 export default LoginPage
+
+LoginPage.getLayout = function getLayout(page) {
+    return <div>{page}</div>;
+};

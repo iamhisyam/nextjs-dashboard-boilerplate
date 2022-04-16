@@ -113,14 +113,11 @@ export const Login = () => {
         initialValues: {
             username: '',
             password: '',
-            savePassword: false,
         },
-
         validate: {
             username: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
         },
     });
-
 
     return (
         <div className="flex flex-col-reverse md:flex-row h-screen min-h-screen ">
@@ -138,7 +135,6 @@ export const Login = () => {
                                 <h1 className="text-3xl">Login</h1>
                                 <p className="text-base text-gray-500">Welcome back! please enter your details</p>
                                 <form onSubmit={form.onSubmit((values) => console.log(values))} className="flex flex-col gap-2">
-
                                     <TextInput
                                         id="username"
                                         label="Username"
@@ -153,20 +149,14 @@ export const Login = () => {
                                         placeholder="Password"
                                         {...form.getInputProps('password')}
                                         required />
-                                      
-                                    <Grid justify="flex-end" align="center" style={{marginBottom:6,padding:8}}>
+
+                                    <Grid justify="flex-end" align="center" style={{ marginBottom: 6, padding: 8 }}>
                                         <a className="text-xs font-bold text-blue-800 hover:text-blue-900" href="#">Forgot Password</a>
                                     </Grid>
-                                    <Button 
-                                   
-                                    type="submit" >Login</Button>
-
-                                    <Center style={{marginTop:6,padding:8}}>
+                                    <Button type="submit" >Login</Button>
+                                    <Center style={{ marginTop: 6, padding: 8 }}>
                                         <p className="text-xs">Don't have an Account? <a className="font-bold text-blue-800 hover:text-blue-900" href="#">SignUp</a></p>
                                     </Center>
-
-                                   
-
                                 </form>
 
                             </div>
