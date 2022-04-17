@@ -7,6 +7,15 @@ const prisma = new PrismaClient()
 
 
 export default NextAuth({
+    jwt: {
+        // The maximum age of the NextAuth.js issued JWT in seconds.
+        // Defaults to `session.maxAge`.
+        maxAge: 60 * 60 * 24 * 30,
+        secret: process.env.NEXTAUTH_SECRET,
+        // You can define your own encode/decode functions for signing and encryption
+        // async encode() {},
+        // async decode() {},
+      },
     session: {
         // Choose how you want to save the user session.
         // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
@@ -24,7 +33,7 @@ export default NextAuth({
         // Note: This option is ignored if using JSON Web Tokens
         updateAge: 24 * 60 * 60, // 24 hours
     },
-    secret: process.env.JWT_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     adapter: PrismaAdapter(prisma),
     // Configure one or more authentication providers
     providers: [
