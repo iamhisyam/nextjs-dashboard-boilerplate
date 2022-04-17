@@ -1,0 +1,1 @@
+export { register as default } from '@/server/api/auth'

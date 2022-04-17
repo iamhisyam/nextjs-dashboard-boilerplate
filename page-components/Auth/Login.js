@@ -107,19 +107,36 @@ const Slider = () => {
 
 }
 
-export const Login = () => {
+export const Login = ({ csrfToken }) => {
+
+    const [loading, setLoading] = useState(false)
 
     const form = useForm({
         initialValues: {
-            username: '',
+            email: '',
             password: '',
 
         },
 
         validate: {
-            username: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
         },
     });
+
+
+    const handleSubmit = async (credentials) => {
+        setLoading(true)
+        let extendCredentials = credentials;
+        extendCredentials.csrfToken = csrfToken
+        console.log(credentials)
+        const response = await fetch("/api/auth/callback/credentials", {
+            method: "POST",
+            body: JSON.stringify(extendCredentials),
+            headers: { "Content-Type": "application/json" }
+        })
+        console.log(response);
+        setLoading(false)
+    }
 
     return (
         <div className="flex flex-col-reverse md:flex-row h-screen min-h-screen ">
@@ -136,12 +153,12 @@ export const Login = () => {
                             <div className="flex flex-col gap-5">
                                 <h1 className="text-3xl">Login</h1>
                                 <p className="text-base text-gray-500">Welcome back! please enter your details</p>
-                                <form onSubmit={form.onSubmit((values) => console.log(values))} className="flex flex-col gap-2" id="login-form">
+                                <form onSubmit={form.onSubmit(handleSubmit)} className="flex flex-col gap-2" id="login-form">
                                     <TextInput
-                                        id="username"
-                                        label="Username"
-                                        placeholder="Username"
-                                        {...form.getInputProps('username')}
+                                        id="email"
+                                        label="Email"
+                                        placeholder="Email"
+                                        {...form.getInputProps('email')}
                                         required />
 
                                     <TextInput
@@ -155,7 +172,7 @@ export const Login = () => {
                                     <Grid justify="flex-end" align="center" style={{ marginBottom: 6, padding: 8 }}>
                                         <a className="text-xs font-bold text-blue-800 hover:text-blue-900" href="#">Forgot Password</a>
                                     </Grid>
-                                    <Button type="submit" >Login</Button>
+                                    <Button loading={loading} type="submit" >Login</Button>
                                     <Center style={{ marginTop: 6, padding: 8 }}>
                                         <p className="text-xs">Don't have an Account? <a className="font-bold text-blue-800 hover:text-blue-900" href="#">SignUp</a></p>
                                     </Center>

@@ -1,37 +1,14 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
 
-function connect(){
-    globalThis.prisma =  globalThis.prisma || null
-    if(globalThis.prisma){
-        globalThis.prisma = new PrismaClient({
-            // log: [
-            //   {
-            //     emit: 'event',
-            //     level: 'query',
-            //   },
-            //   {
-            //     emit: 'stdout',
-            //     level: 'error',
-            //   },
-            //   {
-            //     emit: 'stdout',
-            //     level: 'info',
-            //   },
-            //   {
-            //     emit: 'stdout',
-            //     level: 'warn',
-            //   },
-            // ],
-          });
-          // globalThis.prisma.$on('query', (e) => {
-          //   console.log('Query: ' + e.query)
-          //   console.log('Params: ' + e.params)
-          //   console.log('Duration: ' + e.duration + 'ms')
-          // })
-    }
+let prisma
 
-    return globalThis.prisma;
-
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient()
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient()
+  }
+  prisma = global.prisma
 }
 
-export default connect;
+export default prisma
