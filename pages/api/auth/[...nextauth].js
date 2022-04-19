@@ -61,9 +61,9 @@ export default NextAuth({
                     body: JSON.stringify(credentials),
                     headers: { "Content-Type": "application/json" }
                 })
-                console.log(res)
+                
                 const resp = await res.json()
-                console.log(resp)
+               
                 if(!resp) return null
                 const { data: { user } } = resp
                 // If no error and we have user data, return it

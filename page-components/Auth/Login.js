@@ -2,7 +2,10 @@ import { useSpringCarousel } from "react-spring-carousel"
 import { useEffect, useState } from "react";
 import { TextInput, Checkbox, Grid, Center, Button } from "@mantine/core";
 import { useForm } from '@mantine/form';
-import { Space } from "tabler-icons-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { DotsLoader } from "@/components/Dashboard/Loaders";
+
 
 
 
@@ -110,6 +113,11 @@ const Slider = () => {
 export const Login = ({ csrfToken }) => {
 
     const [loading, setLoading] = useState(false)
+    const { data: session, status } = useSession()
+
+
+    const route =   useRouter()
+  
 
     const form = useForm({
         initialValues: {
@@ -128,15 +136,24 @@ export const Login = ({ csrfToken }) => {
         setLoading(true)
         let extendCredentials = credentials;
         extendCredentials.csrfToken = csrfToken
-        console.log(credentials)
+        
         const response = await fetch("/api/auth/callback/credentials", {
             method: "POST",
             body: JSON.stringify(extendCredentials),
             headers: { "Content-Type": "application/json" }
         })
-        console.log(response);
+      
         setLoading(false)
     }
+
+    if(status==="loading" )return <DotsLoader/>
+
+    if(status==="authenticated"){
+        route.replace("/dashboard")  
+        return <DotsLoader />
+    }
+        
+
 
     return (
         <div className="flex flex-col-reverse md:flex-row h-screen min-h-screen ">
