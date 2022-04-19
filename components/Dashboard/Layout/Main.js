@@ -13,6 +13,7 @@ import {
     
 } from '@mantine/core';
 import Navigation from './Navigation';
+import NavigationNested from './NavigationNested';
 import ProfileMenu from './Avatar';
 
 export default function Main({ children }) {
@@ -29,7 +30,8 @@ export default function Main({ children }) {
             // asideOffsetBreakpoint="sm"
             fixed
             navbar={
-                <Navigation hidden={!opened} />
+                <NavigationNested hidden={!opened} />
+                // <Navigation hidden={!opened} />
             }
             // aside={
             //     <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
