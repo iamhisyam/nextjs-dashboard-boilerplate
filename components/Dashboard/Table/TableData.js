@@ -39,7 +39,7 @@ const GlobalFilter = ({
 export const AvatarCell = ({ value, column, row }) => {
     return <Group>
         <Avatar radius="xl" src={row.original[column.imgAccessor]} />
-        <Text>{value}</Text>
+        <Text size='sm'>{value}</Text>
     </Group>
 }
 

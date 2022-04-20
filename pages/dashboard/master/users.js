@@ -32,7 +32,11 @@ const UsersPage = () => {
             },
             {
                 Header: 'Role',
-                accessor: 'role',
+                accessor: 'UserRole',
+                Cell: ({value})=>{
+                    const { name }= value
+                    return name;
+                },
                 Filter: MultiSelectColumnFilter,
                 filter: "includesSome",
             },

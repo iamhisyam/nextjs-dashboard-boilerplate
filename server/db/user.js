@@ -10,7 +10,8 @@ export const findUsers =
                 id : true,
                 name : true, 
                 image : true,
-                email: true
+                email: true,
+                UserRole : true
             }
             // where: {
             //     ...(filter && { filter })
