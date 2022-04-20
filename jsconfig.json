@@ -5,6 +5,7 @@
             "@/components/*": ["components/*"],
             "@/page-components/*": ["page-components/*"],
             "@/server/*": ["server/*"],
+            "@/lib/*": ["lib/*"],
         }
     }
 }

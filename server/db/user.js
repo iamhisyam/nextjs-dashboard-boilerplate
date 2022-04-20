@@ -1,5 +1,25 @@
 import bcrypt from 'bcrypt'
 
+export const findUsers =
+    async (
+        db,
+        filter
+    ) => {
+        const user = await db.user.findMany({
+            select :{
+                id : true,
+                name : true, 
+                image : true,
+                email: true
+            }
+            // where: {
+            //     ...(filter && { filter })
+            // }
+        });
+
+        return user
+    }
+
 export const createUser =
     async (db,
         {

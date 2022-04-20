@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTable, useSortBy, useFilters, useGlobalFilter, useAsyncDebounce, usePagination, useRowSelect } from 'react-table'
-import { Group, Table, Input, Text, Button, Popover, Stack, InputWrapper, TextInput, MultiSelect, Checkbox, Pagination, Select } from '@mantine/core'
-import { ArrowsSort, SortAscending, SortDescending, Search, Filter, NewSection, Trash } from 'tabler-icons-react'
+import { Group, Table, Input, Text, Button, Popover, Stack, InputWrapper, TextInput, MultiSelect, Checkbox, Pagination, Select, Avatar, ActionIcon } from '@mantine/core'
+import { ArrowsSort, SortAscending, SortDescending, Search, Filter, NewSection, Trash, Edit } from 'tabler-icons-react'
 import { matchSorter } from 'match-sorter';
 import { useMediaQuery } from '@mantine/hooks';
 
@@ -19,20 +19,28 @@ const GlobalFilter = ({
 
     return (
         <Group>
-            
+
             <Text size='sm' color="gray" weight={700}>Search </Text>
             <Input
-             placeholder={`${count} records...`}
+                placeholder={`${count} records...`}
                 value={value || ""}
                 onChange={e => {
                     setValue(e.target.value);
                     onChange(e.target.value);
                 }}
                 icon={<Search size={16}
-                   
+
                 />} />
         </Group>
     )
+}
+
+
+export const AvatarCell = ({ value, column, row }) => {
+    return <Group>
+        <Avatar radius="xl" src={row.original[column.imgAccessor]} />
+        <Text>{value}</Text>
+    </Group>
 }
 
 const IndeterminateCheckbox = React.forwardRef(
@@ -77,12 +85,12 @@ export const MultiSelectColumnFilter = ({ column: { Header, filterValue, preFilt
     const data = React.useMemo(() => {
         const options = []
         preFilteredRows.forEach(row => {
-            if (options.filter(function(e) { return e.value === row.values[id]; }).length > 0) {
-                
-              }else{
+            if (options.filter(function (e) { return e.value === row.values[id]; }).length > 0) {
+
+            } else {
                 options.push({ label: row.values[id], value: row.values[id] })
-              }
-            
+            }
+
         })
 
         return [...options.values()]
@@ -116,7 +124,7 @@ const FilterForm = ({ headerGroups, opened, setOpened, isMobile }) => {
         <Popover
             opened={opened}
             onClose={() => setOpened(false)}
-            position="bottom"
+            position="right"
             placement="end"
             withCloseButton
             title="Filter"
@@ -230,6 +238,24 @@ export const TableData = ({ columns, data }) => {
                     ),
                 },
                 ...columns,
+                {
+                    id: 'action',
+                    disableSort: true,
+
+                    Header: () => (
+                        <div>
+                            <Text size='sm'>Action</Text>
+                        </div>
+                    ),
+
+                    Cell: ({ row }) => (
+                        <div>
+                            <ActionIcon component={Button}  onClick={()=>alert(row)}>
+                                <Edit size={20} />
+                            </ActionIcon>
+                        </div>
+                    ),
+                },
             ])
         },
     )
@@ -252,11 +278,11 @@ export const TableData = ({ columns, data }) => {
                         setOpened={setOpened}
                         isMobile={isMobile}
                     />
-                  
-                    
+
+
                 </Group>
                 <Group>
-                    
+
                     {selectedItems.length > 0 ?
                         <Group>
                             <Text size='sm' >{selectedItems.length} Selected</Text>
@@ -311,26 +337,26 @@ export const TableData = ({ columns, data }) => {
                     })}
                 </tbody>
             </Table>
-            
+
             <Group position='apart' mt={40}>
-                    <Group >
+                <Group >
                     <Text size='sm' color="gray" weight={700}>Page Size </Text>
                     <div className='w-16'>
-                    <Select
-                        size='sm'
-                        value={pageSize}
-                        defaultValue={`${pageSize}`}
-                        onChange={(value=>setPageSize(value))}
-                        data={[
-                            {value:"10",label:"10"},
-                            {value:"25",label:"25"},
-                            {value:"50",label:"50"},
-                        ]}
-                    />
+                        <Select
+                            size='sm'
+                            value={pageSize}
+                            defaultValue={`${pageSize}`}
+                            onChange={(value => setPageSize(value))}
+                            data={[
+                                { value: "10", label: "10" },
+                                { value: "25", label: "25" },
+                                { value: "50", label: "50" },
+                            ]}
+                        />
                     </div>
-                    </Group>
-                    
-                
+                </Group>
+
+
                 <Pagination
                     page={pageIndex + 1}
                     onChange={(page) => {
@@ -340,6 +366,7 @@ export const TableData = ({ columns, data }) => {
                     color="blue"
                     total={pageCount}
                     radius="md"
+                    size="sm"
                     withEdges
                 />
             </Group>

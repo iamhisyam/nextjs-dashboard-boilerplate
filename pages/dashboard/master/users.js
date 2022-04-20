@@ -1,12 +1,16 @@
 import Head from "next/head";
 import { Header } from "@/components/Dashboard/Layout"
 import { useSession, signIn, signOut } from "next-auth/react"
-import { MultiSelectColumnFilter, TableData } from "@/components/Dashboard/Table";
+import { AvatarCell, MultiSelectColumnFilter, TableData } from "@/components/Dashboard/Table";
 
 import React from 'react'
+import { useUsers } from "@/lib/users";
+import { DotsLoader } from "@/components/Dashboard/Loaders";
+import { SkeletonTableData } from "@/components/Dashboard/Skeleton";
 
 const UsersPage = () => {
-    const { data: session } = useSession()
+   
+
     const items = [
         { title: " Dashboard", href: "#" },
         { title: " Master", href: "#" },
@@ -17,7 +21,14 @@ const UsersPage = () => {
         () => [
             {
                 Header: 'Name',
-                accessor: 'email'
+                accessor: 'name',
+                imgAccessor: 'image',
+                Cell: AvatarCell
+            },
+            {
+                Header: 'Email',
+                accessor: 'email',
+
             },
             {
                 Header: 'Role',
@@ -38,82 +49,14 @@ const UsersPage = () => {
         ]
     )
 
-    const data = React.useMemo(
-        () => [
-            {
-                email: "ahmad@gmail.com",
-                role: "Admin",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "hisyam@gmail.com",
-                role: "Hisyam",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "ahmad@gmail.com",
-                role: "Admin",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "hisyam@gmail.com",
-                role: "Hisyam",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "ahmad@gmail.com",
-                role: "Admin",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "hisyam@gmail.com",
-                role: "Hisyam",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "ahmad@gmail.com",
-                role: "Admin",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "hisyam@gmail.com",
-                role: "Hisyam",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "ahmad@gmail.com",
-                role: "Admin",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "hisyam@gmail.com",
-                role: "Hisyam",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "ahmad@gmail.com",
-                role: "Admin",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-            {
-                email: "hisyam@gmail.com",
-                role: "Hisyam",
-                login_at: "22 November 2022 17:50",
-                joined_at: "22 November 2022 17:50"
-            },
-        ]
-    )
+    const { users  , isLoading, isError } = useUsers()
+    
+
+    if(isLoading) return <SkeletonTableData/>
+   console.log(users)
+    const data = users
+    
+    
 
     return (
         <>
@@ -123,7 +66,7 @@ const UsersPage = () => {
             </Head>
             <Header title="Users" items={items} />
             <div className="mt-10 bg-white  rounded-md px-6 py-6 text-xs">
-                <TableData columns={columns} data={data}/>
+                <TableData columns={columns} data={data} />
             </div>
         </>
     )
