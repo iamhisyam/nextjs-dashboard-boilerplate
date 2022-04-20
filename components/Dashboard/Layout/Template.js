@@ -1,6 +1,8 @@
 import Head from "next/head";
 import Main from "./Main";
 
+import authenticateRoute from "@/routes/authenticateRoute";
+
 
 
 const Template = ({ children }) => {
@@ -30,4 +32,4 @@ const Template = ({ children }) => {
 
 }
 
-export default Template;
+export default authenticateRoute(Template);

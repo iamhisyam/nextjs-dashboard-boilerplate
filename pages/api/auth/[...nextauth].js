@@ -3,11 +3,13 @@ import GithubProvider from "next-auth/providers/github"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 import CredentialsProvider from "next-auth/providers/credentials"
+import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
 
 
 export default NextAuth({
+    
     jwt: {
         // The maximum age of the NextAuth.js issued JWT in seconds.
         // Defaults to `session.maxAge`.
@@ -80,4 +82,27 @@ export default NextAuth({
         }),
         // ...add more providers here
     ],
+
+    callbacks: {
+        async signIn({ user, account, profile, email, credentials }) {
+          return true
+        },
+        async redirect({ url, baseUrl }) {
+          return baseUrl
+        },
+        async session({ session, user, token }) {
+            session.userId = token.userId
+          return session
+        },
+        async jwt({ token, user, account, profile, isNewUser }) {
+            const isUserSignedIn = user ? true : false;
+            // make a http call to our graphql api
+            // store this in postgres
+            
+            if(isUserSignedIn) {
+                token.userId = user.id.toString();
+            }
+          return token
+        }
+    }
 })

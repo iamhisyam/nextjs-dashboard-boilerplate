@@ -6,12 +6,12 @@ export const findUsers =
         filter
     ) => {
         const user = await db.user.findMany({
-            select :{
-                id : true,
-                name : true, 
-                image : true,
+            select: {
+                id: true,
+                name: true,
+                image: true,
                 email: true,
-                UserRole : true
+                UserRole: true
             }
             // where: {
             //     ...(filter && { filter })
@@ -35,13 +35,22 @@ export const createUser =
             data: {
                 name,
                 email,
-                ...(password && { password: hashPassword})
+                ...(password && { password: hashPassword })
             }
         })
 
         return user;
 
     }
+
+export const findUserById = async (
+    db,
+    id
+) => {
+    const user = await db.user.findUnique({ where: { id } });
+
+    return user
+}
 
 export const findUserByEmail = async (
     db,
