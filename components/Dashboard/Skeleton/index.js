@@ -1,1 +1,1 @@
-export * from './SekeletonTableData'
+export * from './SkeletonTableData'
