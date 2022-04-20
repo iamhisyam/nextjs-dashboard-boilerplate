@@ -113,11 +113,11 @@ model Menu {
 
   subMenus   Menu[]     @relation("MenuToMenu")
   parentMenu Menu?      @relation("MenuToMenu", fields: [parentMenuId], references: [id])
-  menuAuths  MenuAuth[]
+  menuAuths  MenuAuths[]
   @@map("menus")
 }
 
-model MenuAuth {
+model MenuAuths {
   userRoleCode String
   menuId       Int
 
@@ -138,7 +138,7 @@ model UserRole {
   updatedAt DateTime? @updatedAt
 
   users     User[]
-  menuAuths MenuAuth[]
+  menuAuths MenuAuths[]
 
   @@map("user_roles")
 }

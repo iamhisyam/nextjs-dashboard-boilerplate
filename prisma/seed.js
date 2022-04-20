@@ -13,7 +13,6 @@ async function main() {
           {
             email: 'superadmin@ahisyam.com',
             name: 'Superadmin',
-            username: 'superadmin',
             //std
             password:
               '$2a$10$rFeBnn7VMG8UzvHb6L8XFupav86ICwHg.Xdnt4jYGn3MJosgaSGza',
@@ -34,7 +33,6 @@ async function main() {
           {
             email: 'admin@ahisyam.com',
             name: 'Admin',
-            username: 'admin',
             //std
             password:
               '$2a$10$rFeBnn7VMG8UzvHb6L8XFupav86ICwHg.Xdnt4jYGn3MJosgaSGza',
@@ -44,18 +42,17 @@ async function main() {
     },
   });
 
-  const employee = await prisma.userRole.upsert({
-    where: { code: 'employee' },
+  const member = await prisma.userRole.upsert({
+    where: { code: 'member' },
     update: {},
     create: {
-      code: 'employee',
-      name: 'Employee',
+      code: 'member',
+      name: 'Member',
       users: {
         create: [
           {
-            email: 'employee@ahisyam.com',
-            name: 'employee',
-            username: 'employee',
+            email: 'member@ahisyam.com',
+            name: 'member',
             //std
             password:
               '$2a$10$rFeBnn7VMG8UzvHb6L8XFupav86ICwHg.Xdnt4jYGn3MJosgaSGza',
@@ -76,7 +73,7 @@ async function main() {
         create: [
           { userRoleCode: 'superadmin' },
           { userRoleCode: 'admin'},
-          { userRoleCode: 'employee'},
+          { userRoleCode: 'member'},
         ],
       },
     },
@@ -128,140 +125,7 @@ async function main() {
     },
   });
 
-  const departments = await prisma.menu.upsert({
-    where: {  name: 'Departments' },
-    update: {},
-    create: {
-      name: 'Departments',
-      slug: '/master/departments',
-      parentMenuId: 2,
-      menuAuths: {
-        create: [
-          { userRoleCode: 'superadmin' },
-          { userRoleCode: 'admin'},
-        ],
-      },
-    },
-  });
-
-  const grades = await prisma.menu.upsert({
-    where: { name: 'Grades'},
-    update: {},
-    create: {
-      name: 'Grades',
-      slug: '/master/grades',
-      parentMenuId: 2,
-      menuAuths: {
-        create: [
-          { userRoleCode: 'superadmin'},
-          { userRoleCode: 'admin' },
-        ],
-      },
-    }, 
-  });
-
-  const jobs = await prisma.menu.upsert({
-    where: {name: 'Jobs'},
-    update: {},
-    create: {
  
-      name: 'Jobs',
-      slug: '/master/jobs',
-      parentMenuId: 2,
-      menuAuths: {
-        create: [
-          { userRoleCode: 'superadmin'},
-          { userRoleCode: 'admin'},
-        ],
-      },
-    },
-  });
-
-
-  const payrollmaster = await prisma.menu.upsert({
-    where: { name: 'Payroll', },
-    update: {},
-    create: {
-  
-      name: 'Payroll',
-      slug: '#',
-   
-      menuAuths: {
-        create: [
-          { userRoleCode: 'superadmin'},
-          { userRoleCode: 'admin' },
-        ],
-      },
-    },
-  });
-
-
-  const employees = await prisma.menu.upsert({
-    where: { name: 'Employees'},
-    update: {},
-    create: {
- 
-      name: 'Employees',
-      slug: '/master/employees',
-      parentMenuId: 8,
-      menuAuths: {
-        create: [
-          { userRoleCode: 'superadmin' },
-          { userRoleCode: 'admin' },
-        ],
-      },
-    },
-  });
-
-  const payrollMy = await prisma.menu.upsert({
-    where: { name: 'My Payroll'},
-    update: {},
-    create: {
-      name: 'My Payroll',
-      slug: '/my-payroll',
-
-      menuAuths: {
-        create: [
-          { userRoleCode: 'employee' },
-        ],
-      },
-    },
-  });
-
-
-  const payrollList = await prisma.menu.upsert({
-    where: { name: 'Payroll List'},
-    update: {},
-    create: {
-      name: 'Payroll List',
-      slug: '/master/payrolls',
-      parentMenuId: 8,
-      menuAuths: {
-        create: [
-          { userRoleCode: 'superadmin' },
-          { userRoleCode: 'admin'},
-        ],
-      },
-    },
-  });
-
-
-  const documents = await prisma.menu.upsert({
-    where: { name: 'Documents' },
-    update: {},
-    create: {
-      name: 'Documents',
-      slug: '/master/documents',
-      parentMenuId: 8,
-      menuAuths: {
-        create: [
-          { userRoleCode: 'superadmin' },
-          { userRoleCode: 'admin' },
-        ],
-      },
-    },
-  });
-
   
 
 
@@ -269,14 +133,7 @@ async function main() {
   console.log(master);
   console.log(users);
   console.log(menus);
-  console.log(departments);
-  console.log(grades);
-  console.log(jobs);
-  console.log(payrollmaster);
-  console.log(payrollList);
-  console.log(employees);
-  console.log(payrollMy);
-  console.log(documents);
+
 }
 
 main()
