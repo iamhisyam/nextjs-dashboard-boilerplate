@@ -34,7 +34,7 @@ export const createUser =
             data: {
                 name,
                 email,
-                password: hashPassword
+                ...(password && { password: hashPassword})
             }
         })
 
