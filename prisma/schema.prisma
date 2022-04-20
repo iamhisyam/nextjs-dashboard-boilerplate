@@ -10,24 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
   @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Session {
@@ -35,7 +38,12 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("sessions")
 }
 
 model User {
@@ -44,9 +52,34 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  password      String? @db.Text
+  password      String?   @db.Text
   accounts      Account[]
   sessions      Session[]
+
+  status        StatusUsers
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  UserRole     UserRole?      @relation(fields: [userRoleCode], references: [code])
+  userRoleCode String?
+  activities   UserActivity[]
+
+  @@map("users")
+}
+
+model UserActivity {
+  id     Int     @id @default(autoincrement())
+  userId String
+  type   String
+  desc   String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  User User @relation(fields: [userId], references: [id])
+  @@map("user_activities")
+  
 }
 
 model VerificationToken {
@@ -54,5 +87,65 @@ model VerificationToken {
   token      String   @unique
   expires    DateTime
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
   @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Token {
+  id        String   @id
+  userId    String
+  type      String
+  expireAt  DateTime
+  @@map("tokens")
+}
+
+model Menu {
+  id           Int    @id @default(autoincrement())
+  name         String @unique
+  slug         String
+  parentMenuId Int?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  subMenus   Menu[]     @relation("MenuToMenu")
+  parentMenu Menu?      @relation("MenuToMenu", fields: [parentMenuId], references: [id])
+  menuAuths  MenuAuth[]
+  @@map("menus")
+}
+
+model MenuAuth {
+  userRoleCode String
+  menuId       Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  userRole UserRole @relation(fields: [userRoleCode], references: [code])
+  menu     Menu     @relation(fields: [menuId], references: [id])
+  @@id([userRoleCode, menuId])
+  @@map("menu_auths")
+}
+
+model UserRole {
+  code String @id @unique
+  name String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  users     User[]
+  menuAuths MenuAuth[]
+
+  @@map("user_roles")
+}
+
+
+enum StatusUsers {
+  active
+  hold
+  archived
 }
