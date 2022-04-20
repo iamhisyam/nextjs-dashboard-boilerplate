@@ -50,10 +50,10 @@ export function LinksGroup({ icon: Icon, name,slug, initiallyOpened, subMenu }) 
     // console.log(hasLinks)
     const [opened, setOpened] = useState(initiallyOpened || false);
     const ChevronIcon = theme.dir === 'ltr' ? ChevronRight : ChevronLeft;
-    const items = (hasLinks ? subMenu : []).map(({ slug, name }) => (
-        <Link passHref  href={slug} >
+    const items = (hasLinks ? subMenu : []).map(({ slug, name },id) => (
+        <Link passHref  href={slug}  key={id} >
             <Text
-                key={name}
+               
                 className={classes.link}
                 component='a'
                

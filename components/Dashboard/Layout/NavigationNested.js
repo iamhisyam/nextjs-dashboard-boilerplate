@@ -56,11 +56,11 @@ const menuList = [
         subMenu: [
             {
                 name: "Users",
-                slug: "/dashboard/users",
+                slug: "/dashboard/master/users",
             },
             {
                 name: "Menu Auth",
-                slug: "/dashboard/menu_auth",
+                slug: "/dashboard/master/menu_auth",
             }
             ,
             {
@@ -75,12 +75,12 @@ const menuList = [
 
 export default function NavigationNested({hidden}){
     const { classes } = useStyles();
-    const menus = menuList.map((menu)=>( <LinksGroup {...menu} key={menu.name} /> ))
+    const menus = menuList.map((menu,id)=>( <LinksGroup {...menu} key={id} /> ))
     return(
         <Navbar hidden={hidden} height={800} width={{ sm: 220 }} p="md" >
             <Navbar.Section>
                 <Group position='apart'>
-                    <Text size='md'>A Dashboard</Text>
+                    <Text size='sm' color="gray">Navigation</Text>
                 </Group>
             </Navbar.Section> 
 

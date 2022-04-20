@@ -14,7 +14,6 @@ const Header = ({ title, items }) => {
     return (
         <>
             <Container size="xl" sx={(theme) => ({
-                
                 position: "relative",
                 backgroundColor: "white",
                 margin: -theme.spacing.md,
@@ -22,8 +21,9 @@ const Header = ({ title, items }) => {
                 padding: theme.spacing.md
             })}>
                 <Group>
-                    <Text size='sm'>{title}</Text>
+                    <Text size='lg' weight={700}>{title}</Text>
                     <Breadcrumbs
+                    separator="-"
                         styles={{
                             separator: { color: "#adb5bd" },
                             root: { color: "#adb5bd" },
