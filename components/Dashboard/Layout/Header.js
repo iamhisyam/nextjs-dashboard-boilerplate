@@ -1,4 +1,4 @@
-import { Container, Text, Breadcrumbs, Anchor, Divider, Group, Stack } from '@mantine/core'
+import { Container, Text, Breadcrumbs, Anchor, Divider, Group, Stack, Box } from '@mantine/core'
 
 const Header = ({ title, items }) => {
 
@@ -13,7 +13,7 @@ const Header = ({ title, items }) => {
     ))
     return (
         <>
-            <Container size="xl" sx={(theme) => ({
+            <Box size="xl" sx={(theme) => ({
                 position: "relative",
                 backgroundColor: "white",
                 margin: -theme.spacing.md,
@@ -31,7 +31,7 @@ const Header = ({ title, items }) => {
                     >{links}</Breadcrumbs>
                 </Group>
 
-            </Container>
+            </Box>
         </>
     )
 }
