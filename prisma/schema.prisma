@@ -104,9 +104,10 @@ model Token {
 }
 
 model Menu {
-  id           Int    @id @default(autoincrement())
-  name         String @unique
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
   slug         String
+  iconName     String?
   parentMenuId Int?
 
   createdAt DateTime  @default(now())
@@ -116,8 +117,8 @@ model Menu {
   parentMenu Menu?      @relation("MenuToMenu", fields: [parentMenuId], references: [id])
   menuAuths  MenuAuth[]
 
+
   @@map("menus")
- 
 }
 
 model MenuAuth {
@@ -142,7 +143,7 @@ model UserRole {
 
   users     User[]
   menuAuths MenuAuth[]
- 
+
 
   @@map("user_roles")
 }

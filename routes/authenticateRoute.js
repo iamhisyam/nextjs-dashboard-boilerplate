@@ -19,9 +19,12 @@ const authenticateRoute = (Component = null, options = {}) => {
       if(session){
         const { userId } = session
         const { user }  = await fetcher(`/api/users/${userId}`);
-        console.log(user)
-        // const user = status === "success" ? data.user : {}
         // console.log(user)
+        // if(user){
+        //   const { menuAuths }  = await fetcher(`/api/menuAuths?userRoleCode=${user.userRoleCode}`);
+        //   console.log(menuAuths)
+        // }
+        
         this.setState({loading:false})
       }else{
         Router.push("/login")

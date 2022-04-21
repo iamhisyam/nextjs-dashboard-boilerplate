@@ -11,7 +11,7 @@ export const findUsers =
                 name: true,
                 image: true,
                 email: true,
-                UserRole: true
+                userRole: true
             }
             // where: {
             //     ...(filter && { filter })

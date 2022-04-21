@@ -68,8 +68,9 @@ async function main() {
     create: {
    
       name: 'Dashboard',
+      iconName : 'dashboard',
       slug: '/',
-      menuAuth: {
+      menuAuths: {
         create: [
           { userRoleCode: 'superadmin' },
           { userRoleCode: 'admin'},
@@ -84,8 +85,9 @@ async function main() {
     update: {},
     create: {
       name: 'Master',
+      iconName : 'database',
       slug: '#',
-      menuAuth: {
+      menuAuths: {
         create: [
           { userRoleCode: 'superadmin'},
           { userRoleCode: 'admin'},
@@ -102,7 +104,7 @@ async function main() {
       name: 'Users',
       slug: '/master/users',
       parentMenuId: 2,
-      menuAuth: {
+      menuAuths: {
         create: [
           { userRoleCode: 'superadmin'},
         ],
@@ -117,7 +119,7 @@ async function main() {
       name: 'Menus',
       slug: '/master/menus',
       parentMenuId: 2,
-      menuAuth: {
+      menuAuths: {
         create: [
           { userRoleCode: 'superadmin'},
         ],
