@@ -1,10 +1,13 @@
 import { useSpringCarousel } from "react-spring-carousel"
 import { useEffect, useState } from "react";
 import { TextInput, Checkbox, Grid, Center, Button } from "@mantine/core";
-import { useForm } from '@mantine/form';
+import { useForm, zodResolver } from '@mantine/form';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { DotsLoader } from "@/components/Dashboard/Loaders";
+import { notif } from "@/lib/notification";
+import { z } from 'zod';
+import { ValidateSchema } from "shared/constants";
 
 
 
@@ -116,19 +119,20 @@ export const Login = ({ csrfToken }) => {
     const { data: session, status } = useSession()
 
 
-    const route =   useRouter()
-  
+    const route = useRouter()
+
+    const schema = z.object({
+        email: ValidateSchema.user.email,
+        password: ValidateSchema.user.password
+    })
 
     const form = useForm({
+        schema: zodResolver(schema),
         initialValues: {
             email: '',
             password: '',
-
         },
 
-        validate: {
-            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-        },
     });
 
 
@@ -136,23 +140,31 @@ export const Login = ({ csrfToken }) => {
         setLoading(true)
         let extendCredentials = credentials;
         extendCredentials.csrfToken = csrfToken
-        
+
         const response = await fetch("/api/auth/callback/credentials", {
             method: "POST",
             body: JSON.stringify(extendCredentials),
             headers: { "Content-Type": "application/json" }
         })
-      
+
+        if (response.url.includes("error")) {
+            notif(false, "Login Fail", "Incorect email or password!")
+
+        } else {
+            notif(true, "Login Success", "")
+            route.reload(window.location.pathname)
+        }
+
         setLoading(false)
     }
 
-    if(status==="loading" )return <DotsLoader/>
+    if (status === "loading") return <DotsLoader />
 
-    if(status==="authenticated"){
-        route.replace("/dashboard")  
+    if (status === "authenticated") {
+        route.replace("/dashboard")
         return <DotsLoader />
     }
-        
+
 
 
     return (

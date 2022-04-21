@@ -47,7 +47,20 @@ export const findUserById = async (
     db,
     id
 ) => {
-    const user = await db.user.findUnique({ where: { id } });
+    const user = await db.user.findUnique({ 
+        where: { id },
+        include: {
+            userRole: {
+                include: {
+                    menuAuths : {
+                        include:{
+                             menu: true
+                        }
+                    }
+                }
+            }
+        } 
+    });
 
     return user
 }

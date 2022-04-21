@@ -3,7 +3,7 @@ import GithubProvider from "next-auth/providers/github"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 import CredentialsProvider from "next-auth/providers/credentials"
-import jwt from 'jsonwebtoken'
+
 
 const prisma = new PrismaClient()
 
@@ -68,6 +68,7 @@ export default NextAuth({
                
                 if(!resp) return null
                 const { data: { user } } = resp
+                console.log(user)
                 // If no error and we have user data, return it
                 if (res.ok && user) {
                     return user

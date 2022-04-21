@@ -14,7 +14,7 @@ import {
 } from '@mantine/core';
 import Navigation from './Navigation';
 import NavigationNested from './NavigationNested';
-import ProfileMenu from './Avatar';
+import ProfileMenu from './ProfileMenu';
 
 export default function Main({ children }) {
     const theme = useMantineTheme();
@@ -64,9 +64,7 @@ export default function Main({ children }) {
                                 </svg>
                                 <h1 className="text-lg font-bold ">Payroll<span className="text-blue-800">Kita</span></h1>
                             </div>
-                            <ProfileMenu>
-                                <Avatar color={theme.colors.blue[9]} radius="xl" />
-                            </ProfileMenu>
+                            <ProfileMenu />
                         </div>
                     </div>
                 </Header>

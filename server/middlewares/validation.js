@@ -1,8 +1,6 @@
-import { z } from "zod";
-import { ValidateSchema } from "../config/constants";
+
 
 export default function validation(schema) {
-  //const validate = z.object(schema);
   return (req, res, next) => {
 
     const response = schema.safeParse(req.body)

@@ -34,7 +34,8 @@ const UsersPage = () => {
                 Header: 'Role',
                 accessor: 'UserRole',
                 Cell: ({value})=>{
-                    const { name }= value
+                    if(!value) return "";
+                    const { name } = value
                     return name;
                 },
                 Filter: MultiSelectColumnFilter,

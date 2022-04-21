@@ -2,7 +2,7 @@ import { Login } from "@/page-components/Auth"
 import Head from "next/head"
 import { getCsrfToken } from "next-auth/react"
 
-const LoginPage = ({csrfToken}) => {
+const LoginPage = ({ csrfToken }) => {
     return (
         <div>
             <Head>
@@ -18,9 +18,9 @@ const LoginPage = ({csrfToken}) => {
 
 export default LoginPage
 
-export async function getServerSideProps(ctx){
+export async function getServerSideProps(ctx) {
     return {
-        props:{
+        props: {
             csrfToken: await getCsrfToken(ctx),
         }
     }

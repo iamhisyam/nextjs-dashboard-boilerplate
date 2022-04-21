@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
 import { Template } from '@/components/Dashboard/Layout';
 import { SessionProvider } from 'next-auth/react'
+import { Toaster } from 'react-hot-toast';
 
 function App({ Component, pageProps: { session, ...pageProps } }) {
     const hasLayout = Component.getLayout
@@ -23,6 +24,7 @@ function App({ Component, pageProps: { session, ...pageProps } }) {
                         <Component {...pageProps} />
                     </Template>
                 }
+                <Toaster position='top-right'/>
             </AppProvider>
             </SessionProvider>
         </>

@@ -3,7 +3,7 @@ import { ncOptions } from '@/server/config/ncOptions'
 import database from '@/server/middlewares/database'
 import { findUserByEmailAndPassword } from '@/server/db';
 import validation from '@/server/middlewares/validation';
-import { ValidateSchema } from '@/server/config/constants';
+import { ValidateSchema } from 'shared/constants';
 import { z } from 'zod';
 
 
