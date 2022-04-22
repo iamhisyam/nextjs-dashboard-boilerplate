@@ -197,6 +197,7 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
         setGlobalFilter,
         preGlobalFilteredRows,
         selectedFlatRows,
+        toggleAllRowsSelected,
 
 
         canPreviousPage,
@@ -289,6 +290,9 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
                     {selectedItems.length > 0 ?
                         <Group>
                             <Text size='sm' >{selectedItems.length} Selected</Text>
+                            <Button onClick={()=>toggleAllRowsSelected(false)} variant="outline" color="red">
+                                Clear
+                            </Button>
                             <Button onClick={()=>handleDeleteBulk(selectedItems)} leftIcon={<Trash />} variant="filled" color="red">
                                 Delete
                             </Button>
