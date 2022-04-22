@@ -43,23 +43,71 @@ export const createUser =
 
     }
 
+export const updateUser =
+    async (db,
+        {
+            id,
+            name,
+            email,
+            password
+        }) => {
+
+        let hashPassword = password && await bcrypt.hash(password, 10);
+
+        const user = await db.user.update({
+            where: {
+                id
+            },
+            data: {
+                name,
+                email,
+                ...(password && { password: hashPassword })
+            }
+        })
+
+        return user;
+
+}
+
+export const deleteUserById = async (
+    db,
+    id
+) => {
+    const user = await db.user.delete({
+        where: { id :id }
+    });
+
+    return user
+}
+
+export const deleteUserBulk = async (
+    db,
+    ids
+) => {
+    const user = await db.user.deleteMany({
+        where: { id : { in : ids }}
+    });
+
+    return user
+}
+
 export const findUserById = async (
     db,
     id
 ) => {
-    const user = await db.user.findUnique({ 
+    const user = await db.user.findUnique({
         where: { id },
         include: {
             userRole: {
                 include: {
-                    menuAuths : {
-                        include:{
-                             menu: true
+                    menuAuths: {
+                        include: {
+                            menu: true
                         }
                     }
                 }
             }
-        } 
+        }
     });
 
     return user

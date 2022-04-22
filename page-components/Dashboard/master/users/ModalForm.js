@@ -1,10 +1,13 @@
-import { Modal, TextInput, Divider, Input, Button, Group } from "@mantine/core"
+import { Modal, TextInput, Divider, Input, Button, Group, LoadingOverlay } from "@mantine/core"
 import { useForm, zodResolver } from '@mantine/form';
 import { useEffect, useState } from "react";
 import { ValidateSchema } from "@/shared/constants";
 import { z } from "zod";
+import { fetcher } from "@/lib/fetch";
+import { notif } from "@/lib/notification";
 
-const ModalUserForm = ({ opened, setOpened, data }) => {
+const ModalUserForm = ({ opened, setOpened, data, mutate }) => {
+    const [loading,setLoading] = useState(false)
     const initialValues = {
         id: "",
         name: "",
@@ -34,9 +37,29 @@ const ModalUserForm = ({ opened, setOpened, data }) => {
     const handleCancel = () => {
         setOpened(false)
     }
+    
 
-    const handleSubmit = (values) => {
-        console.log(values)
+    const handleSubmit = async ({ id, name, email, password }) => {
+   
+       const payload = { id, name, email, password }
+       const message = id ? "updated" : "added"
+        setLoading(true)
+        try {
+            const resp = await fetcher("/api/users",{
+                method: id ? "PATCH" :"POST",
+                headers :{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });    
+            notif(true,`User ${message}`,`Successfully ${message}`)
+            setOpened(false)
+            mutate()
+        } catch (error) {
+            notif(false,`User ${message}`,"Fail")
+        }
+       
+        setLoading(false)
     }
 
 
@@ -48,7 +71,8 @@ const ModalUserForm = ({ opened, setOpened, data }) => {
             onClose={() => setOpened(false)}
             title="User Form"
         >
-
+            <div className="relative">
+            <LoadingOverlay visible={loading} />
             <Divider mb={20} />
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Input
@@ -87,11 +111,11 @@ const ModalUserForm = ({ opened, setOpened, data }) => {
                 <Divider my={20} />
                 <Group position="right" >
                     <Button onClick={handleCancel} variant="outline" color="blue">Cancel</Button>
-                    <Button type="submit" variant="filled" color="blue" >Submit</Button>
+                    <Button loading={loading} type="submit" variant="filled" color="blue" >Submit</Button>
                 </Group>
 
             </form>
-
+            </div>
         </Modal>
     )
 }

@@ -94,7 +94,7 @@ const UsersPage = () => {
 
     }
 
-    const { users, isLoading, isError } = useUsers()
+    const { users, isLoading, isError, mutate } = useUsers()
 
     if (isLoading) return <SkeletonTableData />
 
@@ -105,9 +105,9 @@ const UsersPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Header title="Users" items={items} />
-            <ModalDeleteBulk opened={deleteBulkOpened} setOpened={setDeleteBulkOpened} data={selectDatas} />
-            <ModalDelete opened={deleteOpened} setOpened={setDeleteOpened} data={selectData} />
-            <ModalUserForm opened={opened} setOpened={setOpened} data={selectData} />
+            <ModalDeleteBulk opened={deleteBulkOpened} setOpened={setDeleteBulkOpened} data={selectDatas} mutate={mutate} />
+            <ModalDelete opened={deleteOpened} setOpened={setDeleteOpened} data={selectData} mutate={mutate} />
+            <ModalUserForm opened={opened} setOpened={setOpened} data={selectData} mutate={mutate} />
             <div className="mt-10 bg-white  rounded-md px-6 py-6 text-xs">
                 <TableData
                     columns={columns}

@@ -1,15 +1,38 @@
+import { fetcher } from "@/lib/fetch"
+import { notif } from "@/lib/notification"
 import { Box, Modal, Text, Divider, Group, Button, Stack } from "@mantine/core"
+import { useState } from "react"
 import { AlertTriangle  } from "tabler-icons-react"
 
-const ModalDelete = ({ opened, setOpened, data }) => {
+
+const ModalDelete = ({ opened, setOpened, data, mutate }) => {
+    const [loading,setLoading] = useState(false)
 
     const handleCancel = () => {
         setOpened(false)
     }
-
-    const handleDelete = (values) => {
+    
+    const handleDelete = async (value) => {
+        const { id }  = value
+        setLoading(true)
+        try {
+            const resp = await fetcher(`/api/users/${id}`,{
+                method: "DELETE",
+                headers :{
+                    'Content-Type': 'application/json'
+                },    
+            });
+            notif(true,"User deleted","Successfully delete")
+            setOpened(false)
+            mutate()
+        } catch (error) {
+            notif(false,"User deleted","Fail")
+        }
        
-        console.log(values)
+        setLoading(false)
+      
+       
+        
     }
 
     return (
@@ -28,7 +51,7 @@ const ModalDelete = ({ opened, setOpened, data }) => {
                 <Divider my={20}/>
             <Group position="right" >
                 <Button onClick={handleCancel} variant="outline" color="red">Cancel</Button>
-                <Button onClick={()=>handleDelete(data)} variant="filled" color="red" >Delete</Button>
+                <Button loading={loading} onClick={()=>handleDelete(data)} variant="filled" color="red" >Delete</Button>
             </Group>
         </Modal>
     )

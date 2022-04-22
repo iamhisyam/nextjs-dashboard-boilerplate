@@ -1,14 +1,17 @@
 import nc from 'next-connect'
 import { ncOptions } from '@/server/config/ncOptions'
 import database from '@/server/middlewares/database'
-import { findUsers } from '@/server/db';
+import { findUsers, findUserByEmail, updateUser, createUser, deleteUserBulk } from '@/server/db';
+import { ValidateSchema } from '@/shared/constants';
+import validation from '@/server/middlewares/validation';
+import { z } from 'zod';
 
 const handler = nc(ncOptions);
 
 handler.use(database);
 
-handler.get(async(req,res)=>{
-    const users = await findUsers(req.db,{});
+handler.get(async (req, res) => {
+    const users = await findUsers(req.db, {});
 
     res.status(201).json({
         status: "success", data: {
@@ -16,5 +19,89 @@ handler.get(async(req,res)=>{
         }
     })
 })
+
+handler.post(
+    validation(
+        z.object({
+            name: ValidateSchema.user.name,
+            email: ValidateSchema.user.email,
+            password: ValidateSchema.user.password,
+        })
+            // enable strict
+            .strict()
+    ),
+    async (req, res) => {
+
+        const { name, email, password } = req.body
+
+
+        if (await findUserByEmail(req.db, email)) {
+            res.status(400).json({
+                status: "fail", data: {
+                    message: "The email has already been taken"
+                }
+            })
+            return;
+        }
+
+
+        const user = await createUser(req.db, { name, email, password })
+
+
+        res.status(201).json({
+            status: "success", data: {
+                user
+            }
+        })
+
+
+    })
+
+
+handler.patch(
+    validation(
+        z.object({
+            id: ValidateSchema.user.id,
+            name: ValidateSchema.user.name,
+            email: ValidateSchema.user.email,
+            password: ValidateSchema.user.password.optional(),
+        })
+            // enable strict
+            .strict()
+    ),
+    async (req, res) => {
+
+        const { name, email, id } = req.body
+
+        const user = await updateUser(req.db, { name, email, id })
+
+
+        res.status(201).json({
+            status: "success", data: {
+                user
+            }
+        })
+})
+
+handler.delete(
+    validation(
+        z.object({
+            ids: ValidateSchema.user.ids,
+        })
+            .strict()
+    ),
+    async(req,res)=>{
+        const { ids } = req.body
+  
+    const users = await deleteUserBulk(req.db, ids);
+
+    res.status(200).json({
+        status: "success", data: {
+            users
+        }
+    })
+})
+
+
 
 export default handler;

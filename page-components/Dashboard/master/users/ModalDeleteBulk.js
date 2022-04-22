@@ -1,15 +1,42 @@
 import { Box, Modal, Text, Divider, Group, Button, Stack } from "@mantine/core"
 import { AlertTriangle  } from "tabler-icons-react"
+import { useState } from 'react'
+import { notif } from "@/lib/notification"
+import { fetcher } from "@/lib/fetch"
+import { body } from "express-validator"
 
-const ModalDeleteBulk = ({ opened, setOpened, data }) => {
+const ModalDeleteBulk = ({ opened, setOpened, data ,mutate }) => {
+    const [loading,setLoading] = useState(false)
 
     const handleCancel = () => {
         setOpened(false)
     }
-
-    const handleDeleteBulk = (values) => {
+    
+    const handleDeleteBulk = async (values) => {
        
+       
+        const ids = values.map(user=>user.id)
+       
+        setLoading(true)
+        try {
+            const resp = await fetcher(`/api/users`,{
+                method: "DELETE",
+                headers :{
+                    'Content-Type': 'application/json'
+                }, 
+                body : JSON.stringify({ids})
+            });
+            notif(true,"Users deleted","Successfully deleted")
+            setOpened(false)
+            mutate()
+        } catch (error) {
+            console.log(error)
+            notif(false,"Users deleted","Fail")
+        }
+       
+        setLoading(false)
         console.log(values)
+      
     }
 
     return (
@@ -29,7 +56,7 @@ const ModalDeleteBulk = ({ opened, setOpened, data }) => {
                 <Divider my={20}/>
             <Group position="right" >
                 <Button onClick={handleCancel} variant="outline" color="red">Cancel</Button>
-                <Button onClick={()=>handleDeleteBulk(data)} variant="filled" color="red" >Delete</Button>
+                <Button loading={loading} onClick={()=>handleDeleteBulk(data)} variant="filled" color="red" >Delete</Button>
             </Group>
         </Modal>
     )
