@@ -150,7 +150,7 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 
 
-export const TableData = ({ columns, data }) => {
+export const TableData = ({ columns, data, handleEditData, handleAddData, handleDeleteData, handleDeleteBulk }) => {
     const [opened, setOpened] = useState(false)
     const isMobile = useMediaQuery('(max-width: 755px');
     const filterTypes = React.useMemo(
@@ -249,11 +249,14 @@ export const TableData = ({ columns, data }) => {
                     ),
 
                     Cell: ({ row }) => (
-                        <div>
-                            <ActionIcon component={Button}  onClick={()=>alert(row)}>
+                        <Group>
+                            <ActionIcon component={Button}  onClick={()=>handleEditData(row)}>
                                 <Edit size={20} />
                             </ActionIcon>
-                        </div>
+                            <ActionIcon component={Button}  onClick={()=>handleDeleteData(row)}>
+                                <Trash color="red" size={20} />
+                            </ActionIcon>
+                        </Group>
                     ),
                 },
             ])
@@ -286,12 +289,12 @@ export const TableData = ({ columns, data }) => {
                     {selectedItems.length > 0 ?
                         <Group>
                             <Text size='sm' >{selectedItems.length} Selected</Text>
-                            <Button leftIcon={<Trash />} variant="filled" color="red">
+                            <Button onClick={()=>handleDeleteBulk(selectedItems)} leftIcon={<Trash />} variant="filled" color="red">
                                 Delete
                             </Button>
                         </Group>
                         :
-                        <Button leftIcon={<NewSection />} variant="filled" color="blue">
+                        <Button onClick={handleAddData} leftIcon={<NewSection />} variant="filled" color="blue">
                             New
                         </Button>
                     }
@@ -366,7 +369,7 @@ export const TableData = ({ columns, data }) => {
                     color="blue"
                     total={pageCount}
                     radius="md"
-                    size="sm"
+                    size="md"
                     withEdges
                 />
             </Group>
