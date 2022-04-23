@@ -8,6 +8,7 @@ import ModalUserForm from "@/page-components/Dashboard/master/users/ModalForm";
 import { useState } from "react";
 import ModalDelete from "@/page-components/Dashboard/master/users/ModalDelete";
 import ModalDeleteBulk from "@/page-components/Dashboard/master/users/ModalDeleteBulk";
+import { Badge } from "@mantine/core";
 
 
 const UsersPage = () => {
@@ -41,11 +42,11 @@ const UsersPage = () => {
             },
             {
                 Header: 'Role',
-                accessor: 'UserRole',
+                accessor: 'userRole',
                 Cell: ({ value }) => {
                     if (!value) return "";
                     const { name } = value
-                    return name;
+                    return <Badge color="blue" variant="outline">{name}</Badge>;
                 },
                 Filter: MultiSelectColumnFilter,
                 filter: "includesSome",

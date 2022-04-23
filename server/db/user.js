@@ -11,11 +11,16 @@ export const findUsers =
                 name: true,
                 image: true,
                 email: true,
-                userRole: true
-            }
-            // where: {
-            //     ...(filter && { filter })
-            // }
+                userRoleCode: true,          
+                userRole : {
+                    select : {
+                        code: true,
+                        name : true
+                    }
+                } 
+            },
+            
+
         });
 
         return user
