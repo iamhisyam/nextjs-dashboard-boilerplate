@@ -26,13 +26,14 @@ handler.post(
             name: ValidateSchema.user.name,
             email: ValidateSchema.user.email,
             password: ValidateSchema.user.password,
+            userRoleCode: ValidateSchema.user.userRoleCode,
         })
             // enable strict
             .strict()
     ),
     async (req, res) => {
 
-        const { name, email, password } = req.body
+        const { name, email, password, userRoleCode } = req.body
 
 
         if (await findUserByEmail(req.db, email)) {
@@ -45,7 +46,7 @@ handler.post(
         }
 
 
-        const user = await createUser(req.db, { name, email, password })
+        const user = await createUser(req.db, { name, email, password, userRoleCode })
 
 
         res.status(201).json({
@@ -65,15 +66,16 @@ handler.patch(
             name: ValidateSchema.user.name,
             email: ValidateSchema.user.email,
             password: ValidateSchema.user.password.optional(),
+            userRoleCode: ValidateSchema.user.userRoleCode,
         })
             // enable strict
             .strict()
     ),
     async (req, res) => {
 
-        const { name, email, id } = req.body
+        const { name, email, id, userRoleCode } = req.body
 
-        const user = await updateUser(req.db, { name, email, id })
+        const user = await updateUser(req.db, { name, email, id, userRoleCode })
 
 
         res.status(201).json({

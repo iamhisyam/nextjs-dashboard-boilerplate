@@ -65,8 +65,7 @@ const UsersPage = () => {
     )
 
 
-    const handleEditData = ({original}) => {
-        console.log(original)
+    const handleEditData = ({ original }) => {
         //open modal
         setOpened(true);
         setSelectData(original)
@@ -80,7 +79,7 @@ const UsersPage = () => {
 
     }
 
-    const handleDeleteData = ({original}) => {
+    const handleDeleteData = ({ original }) => {
         //open modal
         setDeleteOpened(true);
         setSelectData(original)
@@ -91,11 +90,10 @@ const UsersPage = () => {
         //open modal
         setDeleteBulkOpened(true);
         setSelectDatas(selectedItems)
-        console.log(selectedItems)
-
     }
 
     const { users, isLoading, isError, mutate } = useUsers()
+
 
     if (isLoading) return <SkeletonTableData />
 

@@ -6,6 +6,7 @@ export const ValidateSchema = {
         email: z.string().email({ message: "Invalid email"}),
         name: z.string().nonempty(1,{message:"name required"}),
         id: z.string().nonempty(1,{message:"Missing Id"}),
+        userRoleCode: z.string().nonempty(1,{message:"Missing userRoleCode"}),
         ids: z.string().array().nonempty(1,{message:"Missing Id"})
     },
 

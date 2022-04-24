@@ -31,7 +31,8 @@ export const createUser =
         {
             name,
             email,
-            password
+            password,
+            userRoleCode
         }) => {
 
         let hashPassword = await bcrypt.hash(password, 10);
@@ -40,6 +41,7 @@ export const createUser =
             data: {
                 name,
                 email,
+                userRoleCode,
                 ...(password && { password: hashPassword })
             }
         })
@@ -54,6 +56,7 @@ export const updateUser =
             id,
             name,
             email,
+            userRoleCode,
             password
         }) => {
 
@@ -66,6 +69,7 @@ export const updateUser =
             data: {
                 name,
                 email,
+                userRoleCode,
                 ...(password && { password: hashPassword })
             }
         })
@@ -140,6 +144,12 @@ export const findUserByEmailAndPassword = async (
 
     if (!match) return null;
     return user
+}
+
+
+export const findUserRoles = async (db,{}) => {
+    const userRoles = await db.userRole.findMany()
+    return userRoles;
 }
 
 
