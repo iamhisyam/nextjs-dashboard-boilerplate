@@ -14,7 +14,7 @@ handler.get(async (req, res) => {
     const users = await findUsers(req.db, {});
 
     res.status(201).json({
-        status: "success", data: {
+        success: true, data: {
             users
         }
     })
@@ -38,9 +38,9 @@ handler.post(
 
         if (await findUserByEmail(req.db, email)) {
             res.status(400).json({
-                status: "fail", data: {
-                    message: "The email has already been taken"
-                }
+                success: false, 
+                    error: "The email has already been taken"
+                
             })
             return;
         }
@@ -50,7 +50,7 @@ handler.post(
 
 
         res.status(201).json({
-            status: "success", data: {
+            success: true, data: {
                 user
             }
         })
@@ -79,7 +79,7 @@ handler.patch(
 
 
         res.status(201).json({
-            status: "success", data: {
+            success: true, data: {
                 user
             }
         })
@@ -98,7 +98,7 @@ handler.delete(
     const users = await deleteUserBulk(req.db, ids);
 
     res.status(200).json({
-        status: "success", data: {
+        sucess: true, data: {
             users
         }
     })

@@ -12,7 +12,7 @@ handler.get(async(req,res)=>{
     const user = await findUserById(req.db, userId);
 
     res.status(201).json({
-        status: "success", data: {
+        success: true, data: {
             user
         }
     })
@@ -24,7 +24,7 @@ handler.delete(async(req,res)=>{
     const user = await deleteUserById(req.db, userId);
 
     res.status(201).json({
-        status: "success", data: {
+        success: true, data: {
             user
         }
     })

@@ -61,7 +61,7 @@ const ModalUserForm = ({ opened, setOpened, data, mutate }) => {
             setOpened(false)
             mutate()
         } catch (error) {
-            notif(false, `User ${message}`, "Fail")
+            notif(false, `User ${message}`, error)
         }
 
         setLoading(false)

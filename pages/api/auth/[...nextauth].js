@@ -68,7 +68,7 @@ export default NextAuth({
                
                 if(!resp) return null
                 const { data: { user } } = resp
-                console.log(user)
+                
                 // If no error and we have user data, return it
                 if (res.ok && user) {
                     return user

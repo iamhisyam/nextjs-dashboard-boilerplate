@@ -1,4 +1,4 @@
-import { Group, Navbar, Text, createStyles } from '@mantine/core'
+import { Group, Navbar, Text, createStyles, Skeleton } from '@mantine/core'
 import { LayoutDashboard,  Settings, Database, Users, User, Folder } from 'tabler-icons-react';
 
 import { LinksGroup } from '@/components/Dashboard/NavbarLinksGroup'
@@ -6,6 +6,11 @@ import { LinksGroup } from '@/components/Dashboard/NavbarLinksGroup'
 import { useSession } from "next-auth/react"
 import { useMenuAuths } from '@/lib/menuAuths';
 import { useUser } from '@/lib/users';
+import { useRouter } from 'next/router';
+import { SkeletonNavigation } from '../Skeleton/SkeletonNavigation';
+
+
+
 
 
 const iconList = 
@@ -77,12 +82,18 @@ const iconList =
 
 export default function NavigationNested({ hidden }) {
     const { classes } = useStyles();
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
 
-    const { user, isLoading } = useUser(session.userId)
+    
+    
+    const { user, isLoading } = useUser(session?.userId)
+  
+  
 
+    const { menuAuths, isLoading : loadingMenuAuth } = useMenuAuths(user.userRoleCode);
 
-    const { menuAuths } = useMenuAuths(user.userRoleCode);
+    if(isLoading)return <SkeletonNavigation hidden={hidden}/>
+
 
     const menuList =  menuAuths.map(({name,slug, iconName, subMenus},id)=>({
         name,

@@ -17,8 +17,8 @@ const authenticateRoute = (Component = null, options = {}) => {
     async componentDidMount() {
       const session = await getSession()
       if(session){
-        const { userId } = session
-        const { user }  = await fetcher(`/api/users/${userId}`);
+        // const { userId } = session
+        // const { user }  = await fetcher(`/api/users/${userId}`);
         // console.log(user)
         // if(user){
         //   const { menuAuths }  = await fetcher(`/api/menuAuths?userRoleCode=${user.userRoleCode}`);

@@ -3,7 +3,7 @@ import { AlertTriangle  } from "tabler-icons-react"
 import { useState } from 'react'
 import { notif } from "@/lib/notification"
 import { fetcher } from "@/lib/fetch"
-import { body } from "express-validator"
+
 
 const ModalDeleteBulk = ({ opened, setOpened, data ,mutate }) => {
     const [loading,setLoading] = useState(false)
@@ -30,12 +30,11 @@ const ModalDeleteBulk = ({ opened, setOpened, data ,mutate }) => {
             setOpened(false)
             mutate()
         } catch (error) {
-            console.log(error)
-            notif(false,"Users deleted","Fail")
+            notif(false,"Users deleted",error)
         }
        
         setLoading(false)
-        console.log(values)
+
       
     }
 

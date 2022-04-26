@@ -29,9 +29,9 @@ handler.post(
 
         if (await findUserByEmail(req.db, email)) {
             res.status(400).json({
-                status: "fail", data: {
-                    message: "The email has already been taken"
-                }
+                success: false, 
+                error: "The email has already been taken"
+                
             })
             return;
         }
@@ -41,7 +41,7 @@ handler.post(
 
 
         res.status(201).json({
-            status: "success", data: {
+            success: true, data: {
                 user
             }
         })

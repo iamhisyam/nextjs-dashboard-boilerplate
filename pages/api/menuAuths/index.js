@@ -24,7 +24,7 @@ handler.get(async (req, res) => {
         }
     })
     res.status(201).json({
-        status: "success", data: {
+        success: true, data: {
             menuAuths: menus
         }
     })

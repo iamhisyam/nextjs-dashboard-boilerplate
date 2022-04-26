@@ -26,7 +26,7 @@ const ModalDelete = ({ opened, setOpened, data, mutate }) => {
             setOpened(false)
             mutate()
         } catch (error) {
-            notif(false,"User deleted","Fail")
+            notif(false,"User deleted",error)
         }
        
         setLoading(false)

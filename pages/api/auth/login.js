@@ -31,7 +31,7 @@ handler.post(
         if (user) {
             delete user.password
             res.json({
-                status: "success", data: {
+                success: true, data: {
                     user
                 }
             })
@@ -40,7 +40,7 @@ handler.post(
         } else {
 
             res.json({
-                status: "fail", data: {
+                success: true, data: {
                     message: "Cannot find"
                 }
             })
