@@ -18,6 +18,11 @@ export const findMenuAuths =
                         subMenus : true
                     }
                 }
+            },
+            orderBy : {
+                menu :{
+                    id: "asc"
+                }
             }
         });
 
