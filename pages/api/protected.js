@@ -14,13 +14,13 @@ handler.get(async (req, res) => {
     if(session){
         const token = await getToken({req})
         res.json({
-            status: "success", data: {
+            success: true, data: {
                 token
             }
         })
     }else{
-        res.json({
-            status: "fail", data: "You must login to access this data"
+        res.status(401).json({
+            success: false, error: "You must login to access this data"
         })
     }
      

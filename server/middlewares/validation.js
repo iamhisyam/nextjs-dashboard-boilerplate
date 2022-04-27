@@ -17,8 +17,8 @@ export default function validation(schema) {
         message
       }))
       return res.status(400).json({
-        status: "fail",
-        data: issues
+        success: false,
+        error: issues
       });
     }
     return next();

@@ -5,10 +5,12 @@ import { findUsers, findUserByEmail, updateUser, createUser, deleteUserBulk } fr
 import { ValidateSchema } from '@/shared/constants';
 import validation from '@/server/middlewares/validation';
 import { z } from 'zod';
+import authSession from '@/server/middlewares/sessions';
 
 const handler = nc(ncOptions);
 
 handler.use(database);
+handler.use(authSession);
 
 handler.get(async (req, res) => {
     const users = await findUsers(req.db, {});
