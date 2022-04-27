@@ -92,7 +92,7 @@ export default function NavigationNested({ hidden }) {
 
     const { menuAuths, isLoading : loadingMenuAuth } = useMenuAuths(user.userRoleCode);
 
-    if(isLoading)return <SkeletonNavigation hidden={hidden}/>
+    if(status==="loading")return <SkeletonNavigation hidden={hidden}/>
 
 
     const menuList =  menuAuths.map(({name,slug, iconName, subMenus},id)=>({

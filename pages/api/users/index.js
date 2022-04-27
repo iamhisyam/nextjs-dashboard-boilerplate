@@ -98,7 +98,7 @@ handler.delete(
     const users = await deleteUserBulk(req.db, ids);
 
     res.status(200).json({
-        sucess: true, data: {
+        success: true, data: {
             users
         }
     })

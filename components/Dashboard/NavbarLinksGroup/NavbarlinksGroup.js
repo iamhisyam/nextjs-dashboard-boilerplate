@@ -69,7 +69,10 @@ export function LinksGroup({ icon: Icon, name,slug, initiallyOpened, subMenu }) 
         <>
             <UnstyledButton onClick={() => setOpened(o => !o)} className={classes.control}>
                 <Group position='apart' spacing={0}>
-                    <Link href={slug}>
+                    {!hasLinks ? 
+                    
+                
+                    <Link href={slug} >
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <ThemeIcon variant="light" size={30}>
                         <Icon size={18} />
@@ -77,6 +80,14 @@ export function LinksGroup({ icon: Icon, name,slug, initiallyOpened, subMenu }) 
                     <Box ml="md">{name}</Box>
                     </Box>
                     </Link>
+                    :
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <ThemeIcon variant="light" size={30}>
+                        <Icon size={18} />
+                    </ThemeIcon>
+                    <Box ml="md">{name}</Box>
+                    </Box>
+                    }
                     {hasLinks && (
                         <ChevronIcon
                             className={classes.chevron}
