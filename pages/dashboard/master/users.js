@@ -42,14 +42,15 @@ const UsersPage = () => {
             },
             {
                 Header: 'Role',
-                accessor: 'userRole',
+                accessor: 'userRole.code',
                 Cell: ({ value }) => {
                     if (!value) return "";
-                    const { name } = value
-                    return <Badge color="blue" variant="outline">{name}</Badge>;
+               
+                    return <Badge color="blue" variant="outline">{value}</Badge>;
                 },
                 Filter: MultiSelectColumnFilter,
-                filter: "includesSome",
+                filter: "multiSelect",
+
             },
             {
                 Header: 'Login',

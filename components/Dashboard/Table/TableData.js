@@ -80,11 +80,12 @@ const DefaultColumnFilter = ({ column: { Header, filterValue, preFilteredRows, s
 
 export const MultiSelectColumnFilter = ({ column: { Header, filterValue, preFilteredRows, setFilter, id } }) => {
     const count = preFilteredRows.length
-
-    // using the preFilteredRows
+    //console.log(preFilteredRows)
+    // using the preFilteredRows    
     const data = React.useMemo(() => {
         const options = []
         preFilteredRows.forEach(row => {
+            //check if the data already exist, if exist skip
             if (options.filter(function (e) { return e.value === row.values[id]; }).length > 0) {
 
             } else {
@@ -95,6 +96,8 @@ export const MultiSelectColumnFilter = ({ column: { Header, filterValue, preFilt
 
         return [...options.values()]
     }, [id, preFilteredRows])
+    // console.log(data)
+    // console.log(filterValue)
 
     return (
 
@@ -104,7 +107,9 @@ export const MultiSelectColumnFilter = ({ column: { Header, filterValue, preFilt
             data={data}
             value={filterValue || ''}
             clearable
-            onChange={(e) => { setFilter(e) }}
+            onChange={(e) => { 
+                setFilter(e) 
+            }}
         />
 
     )
@@ -155,9 +160,15 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
     const isMobile = useMediaQuery('(max-width: 755px');
     const filterTypes = React.useMemo(
         () => ({
-            multiSelect: (rows, id, filterValues) => {
-                if (filterValues.length === 0) return rows;
-                return rows.filter((r) => filterValues.includes(r.values[id]));
+            multiSelect: (rows, id, filterValue) => {
+               
+                if (filterValue.length === 0) return rows;
+
+                return rows.filter((r) => { 
+                   
+                    return filterValue.includes(r.values[id])
+                } );
+
             },
             // Add a new fuzzyTextFilterFn filter type.
             fuzzyText: fuzzyTextFilterFn,
@@ -182,6 +193,7 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
         () => ({
             // Let's set up our default Filter UI
             Filter: DefaultColumnFilter,
+           
         }),
         []
     )
@@ -306,6 +318,7 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
 
                 </Group>
             </Group>
+            <div className='overflow-x-auto'>
             <Table {...getTableProps()}>
                 <thead>
                     {headerGroups.map(headerGroup => (
@@ -344,6 +357,7 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
                     })}
                 </tbody>
             </Table>
+            </div>
 
             <Group position='apart' mt={40}>
                 <Group >
