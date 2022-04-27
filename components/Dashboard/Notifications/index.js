@@ -4,7 +4,6 @@ import toast from 'react-hot-toast';
 
 
 export const Notif = ({ success, title, message, t }) => {
-    console.log(t)
     const Icon = success ? Check : X;
     const color = success ? "teal" : "red";
     return (
@@ -15,7 +14,6 @@ export const Notif = ({ success, title, message, t }) => {
             color={color} 
             onClose={() => toast.dismiss(t.id)} 
             title={title}
-     
             >
                 {message}
             </Notification>
