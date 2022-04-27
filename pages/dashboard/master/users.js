@@ -49,7 +49,7 @@ const UsersPage = () => {
                     return <Badge color="blue" variant="outline">{value}</Badge>;
                 },
                 Filter: MultiSelectColumnFilter,
-                filter: "multiSelect",
+                filter: "includesSome",
 
             },
             {
