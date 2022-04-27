@@ -107,8 +107,8 @@ export const MultiSelectColumnFilter = ({ column: { Header, filterValue, preFilt
             data={data}
             value={filterValue || ''}
             clearable
-            onChange={(e) => { 
-                setFilter(e) 
+            onChange={(e) => {
+                setFilter(e)
             }}
         />
 
@@ -161,13 +161,13 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
     const filterTypes = React.useMemo(
         () => ({
             multiSelect: (rows, id, filterValue) => {
-               
+
                 if (filterValue.length === 0) return rows;
 
-                return rows.filter((r) => { 
-                   
+                return rows.filter((r) => {
+
                     return filterValue.includes(r.values[id])
-                } );
+                });
 
             },
             // Add a new fuzzyTextFilterFn filter type.
@@ -193,7 +193,7 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
         () => ({
             // Let's set up our default Filter UI
             Filter: DefaultColumnFilter,
-           
+
         }),
         []
     )
@@ -263,10 +263,10 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
 
                     Cell: ({ row }) => (
                         <Group>
-                            <ActionIcon component={Button}  onClick={()=>handleEditData(row)}>
+                            <ActionIcon component={Button} onClick={() => handleEditData(row)}>
                                 <Edit size={20} />
                             </ActionIcon>
-                            <ActionIcon component={Button}  onClick={()=>handleDeleteData(row)}>
+                            <ActionIcon component={Button} onClick={() => handleDeleteData(row)}>
                                 <Trash color="red" size={20} />
                             </ActionIcon>
                         </Group>
@@ -302,10 +302,10 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
                     {selectedItems.length > 0 ?
                         <Group>
                             <Text size='sm' >{selectedItems.length} Selected</Text>
-                            <Button onClick={()=>toggleAllRowsSelected(false)} variant="outline" color="red">
+                            <Button onClick={() => toggleAllRowsSelected(false)} variant="outline" color="red">
                                 Clear
                             </Button>
-                            <Button onClick={()=>handleDeleteBulk(selectedItems)} leftIcon={<Trash />} variant="filled" color="red">
+                            <Button onClick={() => handleDeleteBulk(selectedItems)} leftIcon={<Trash />} variant="filled" color="red">
                                 Delete
                             </Button>
                         </Group>
@@ -319,44 +319,44 @@ export const TableData = ({ columns, data, handleEditData, handleAddData, handle
                 </Group>
             </Group>
             <div className='overflow-x-auto'>
-            <Table {...getTableProps()}>
-                <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    <Group position='left'>
-                                        {column.canSort ?
-                                            <span>
-                                                {column.isSorted ?
-                                                    column.isSortedDesc ? <SortDescending size={14} color="blue" />
-                                                        : <SortAscending size={14} color="blue" />
-                                                    : <ArrowsSort size={14} />
-                                                }
-                                            </span> : null}
-                                        {column.render('Header')}
+                <Table {...getTableProps()}>
+                    <thead>
+                        {headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                        <Group position='left'>
+                                            {column.canSort ?
+                                                <span>
+                                                    {column.isSorted ?
+                                                        column.isSortedDesc ? <SortDescending size={14} color="blue" />
+                                                            : <SortAscending size={14} color="blue" />
+                                                        : <ArrowsSort size={14} />
+                                                    }
+                                                </span> : null}
+                                            {column.render('Header')}
 
-                                    </Group>
+                                        </Group>
 
-                                </th>
+                                    </th>
 
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {page.map((row, i) => {
-                        prepareRow(row)
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map(cell => {
-                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                })}
+                                ))}
                             </tr>
-                        )
-                    })}
-                </tbody>
-            </Table>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {page.map((row, i) => {
+                            prepareRow(row)
+                            return (
+                                <tr {...row.getRowProps()}>
+                                    {row.cells.map(cell => {
+                                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                    })}
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </Table>
             </div>
 
             <Group position='apart' mt={40}>
