@@ -7,34 +7,29 @@ import { useMediaQuery } from '@mantine/hooks';
 
 
 const GlobalFilter = ({
-    preGlobalFilteredRows,
     globalFilter,
     setGlobalFilter,
+    count
 }) => {
-    const count = preGlobalFilteredRows.length
-    const [value, setValue] = React.useState(globalFilter)
     const onChange = useAsyncDebounce(value => {
-        setGlobalFilter(value || undefined)
-    }, 200)
-
+        setGlobalFilter(value || "")
+    }, 100)
     return (
         <Group>
 
             <Text size='sm' color="gray" weight={700}>Search </Text>
             <Input
                 placeholder={`${count} records...`}
-                value={value || ""}
+                value={globalFilter || ""}
                 onChange={e => {
-                    setValue(e.target.value);
+
                     onChange(e.target.value);
                 }}
                 icon={<Search size={16}
-
                 />} />
         </Group>
     )
 }
-
 
 export const AvatarCell = ({ value, column, row }) => {
     return <Group>
@@ -61,7 +56,10 @@ const IndeterminateCheckbox = React.forwardRef(
 )
 
 const DefaultColumnFilter = ({ column: { Header, filterValue, preFilteredRows, setFilter } }) => {
-    const count = preFilteredRows.length
+
+    const onChange = useAsyncDebounce(value => {
+        setFilter(value || undefined)
+    }, 100)
 
     return (
 
@@ -69,35 +67,21 @@ const DefaultColumnFilter = ({ column: { Header, filterValue, preFilteredRows, s
             label={Header}
             value={filterValue || ''}
             onChange={e => {
-                setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+                onChange(e.target.value || undefined) // Set undefined to remove the filter entirely
             }}
-            placeholder={`Search ${count} records...`}
+            placeholder={`Search records...`}
 
         />
 
     )
 }
 
-export const MultiSelectColumnFilter = ({ column: { Header, filterValue, preFilteredRows, setFilter, id } }) => {
-    const count = preFilteredRows.length
-    //console.log(preFilteredRows)
-    // using the preFilteredRows    
+export const MultiSelectColumnFilter = ({ column: { Header, filterValue, setFilter, id, options } }) => {
     const data = React.useMemo(() => {
-        const options = []
-        preFilteredRows.forEach(row => {
-            //check if the data already exist, if exist skip
-            if (options.filter(function (e) { return e.value === row.values[id]; }).length > 0) {
-
-            } else {
-                options.push({ label: row.values[id], value: row.values[id] })
-            }
-        })
-
         return [...options.values()]
-    }, [id, preFilteredRows])
+    }, [id, filterValue])
 
     return (
-
         <MultiSelect
             withinPortal={true}
             label={Header}
@@ -108,11 +92,10 @@ export const MultiSelectColumnFilter = ({ column: { Header, filterValue, preFilt
                 setFilter(e)
             }}
         />
-
     )
 }
 
-const FilterForm = ({ headerGroups, opened, setOpened, isMobile }) => {
+const FilterForm = ({ headerGroups, opened, setOpened, isMobile, applyFilters, setAllFilters }) => {
 
     const items = headerGroups.map(headerGroup =>
         headerGroup.headers.filter(column => column.canFilter).map(column => {
@@ -124,6 +107,7 @@ const FilterForm = ({ headerGroups, opened, setOpened, isMobile }) => {
 
     return (
         <Popover
+            withinPortal={false}
             opened={opened}
             onClose={() => setOpened(false)}
             position="right"
@@ -152,17 +136,21 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 
 
-export const TableData = ({ 
-    columns, 
-    data, 
-    handleEditData, 
-    handleAddData, 
-    handleDeleteData, 
+export const TableDataDynamic = ({
+    columns,
+    data,
+    handleEditData,
+    handleAddData,
+    handleDeleteData,
     handleDeleteBulk,
+    fetchData,
+    pageCount: controlledPageCount,
+    count,
+    applyFilters
 
 }) => {
     const [opened, setOpened] = useState(false)
-    const skipPageResetRef = React.useRef()
+
     const isMobile = useMediaQuery('(max-width: 755px');
     const filterTypes = React.useMemo(
         () => ({
@@ -208,32 +196,33 @@ export const TableData = ({
         getTableProps,
         getTableBodyProps,
         headerGroups,
-        rows,
         page,
         prepareRow,
-        state: { globalFilter, pageIndex, pageSize, selectedRowIds },
+        state: { globalFilter, pageIndex, pageSize, sortBy, filters, selectedRowIds },
         setGlobalFilter,
         preGlobalFilteredRows,
         selectedFlatRows,
         toggleAllRowsSelected,
+        setAllFilters,
 
-
-        canPreviousPage,
-        canNextPage,
-        pageOptions,
         pageCount,
         gotoPage,
-        nextPage,
-        previousPage,
         setPageSize,
 
-    } = useTable({ 
-        columns, 
-        data, 
-        defaultColumn, 
+    } = useTable({
+        columns,
+        data,
+        defaultColumn,
         filterTypes,
-        initialState: {pageIndex:0},
 
+        manualPagination: true,
+        pageCount: controlledPageCount,
+        autoResetPage: false,
+
+        manualSortBy: true,
+        manualGlobalFilter: true,
+        manualFilters: true,
+        // autoResetFilters: false
 
 
     },
@@ -291,9 +280,12 @@ export const TableData = ({
         },
     )
 
+    React.useEffect(() => {
+
+        fetchData({ pageIndex, pageSize, sortBy, globalFilter, filters })
+    }, [fetchData, pageIndex, pageSize, sortBy, globalFilter, filters])
 
     const selectedItems = selectedFlatRows.map((item) => item.original)
-    const count = preGlobalFilteredRows.length
 
     // Render the UI for your table
     return (
@@ -304,14 +296,29 @@ export const TableData = ({
                         preGlobalFilteredRows={preGlobalFilteredRows}
                         globalFilter={globalFilter}
                         setGlobalFilter={setGlobalFilter}
+                        count={count}
                     />
                     <FilterForm headerGroups={headerGroups}
                         opened={opened}
                         setOpened={setOpened}
                         isMobile={isMobile}
+                        count={count}
+                        setAllFilters={setAllFilters}
+                        applyFilters={applyFilters}
                     />
+                    <Button
+                    color="blue"
+                        onClick={() => {
+                            console.log(globalFilter)
+                            setGlobalFilter("")
+                            setAllFilters([])
+                            applyFilters()
 
-
+                        }}
+                        variant="default">Clear</Button>
+                    <Button color="blue" onClick={() => {
+                        applyFilters()
+                    }} variant="filled">Apply</Button>
                 </Group>
                 <Group>
 

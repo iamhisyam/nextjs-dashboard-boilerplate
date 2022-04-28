@@ -3,9 +3,24 @@ import bcrypt from 'bcrypt'
 export const findUsers =
     async (
         db,
-        filter
+        params
     ) => {
-        const user = await db.user.findMany({
+        const { row, limit, sort, global, filter } = params
+        const trans = await db.$transaction([
+            db.user.count({
+                where : {
+                    ...(global && { OR : global}),
+                    ...(filter && { AND : filter})
+                },
+            }),
+            db.user.findMany({
+            where : {
+                ...(global && { OR : global}),
+                ...(filter && { AND : filter})
+            },
+            orderBy: sort,
+            skip:row,
+            take:limit,
             select: {
                 id: true,
                 name: true,
@@ -21,9 +36,10 @@ export const findUsers =
             },
             
 
-        });
-
-        return user
+        })
+        ])
+        
+        return {count: trans[0] ,users: trans[1] }
     }
 
 export const createUser =

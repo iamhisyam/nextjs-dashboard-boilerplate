@@ -13,11 +13,21 @@ handler.use(database);
 handler.use(authSession);
 
 handler.get(async (req, res) => {
-    const users = await findUsers(req.db, {});
+    const { row, limit, sort, global, filter } = req.query
+   
+   
+    const {users, count} = await findUsers(req.db, {
+        row: parseInt(row), 
+        limit:  parseInt(limit), 
+        sort: JSON.parse(sort),
+        global: JSON.parse(global),
+        filter: JSON.parse(filter)
+    });
 
     res.status(201).json({
         success: true, data: {
-            users
+            users,
+            count
         }
     })
 })
