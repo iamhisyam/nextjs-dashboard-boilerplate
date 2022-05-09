@@ -1,17 +1,16 @@
 import Head from "next/head";
 import { Header } from "@/components/Dashboard/Layout"
 import { AvatarCell, MultiSelectColumnFilter, TableDataDynamic } from "@/components/Dashboard/Table/TableDataDynamic";
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useUsers } from "@/lib/users";
 import { SkeletonTableData } from "@/components/Dashboard/Skeleton";
 import ModalUserForm from "@/page-components/Dashboard/master/userspage/ModalForm";
-import { useState, useMemo } from "react";
+
 import ModalDelete from "@/page-components/Dashboard/master/userspage/ModalDelete";
 import ModalDeleteBulk from "@/page-components/Dashboard/master/userspage/ModalDeleteBulk";
 import { Badge } from "@mantine/core";
 import { fetcher } from "@/lib/fetch";
 import { useUserRoles } from "@/lib/users";
-
 
 
 
@@ -27,8 +26,7 @@ const UsersPage = () => {
     const [selectData, setSelectData] = useState({})
     const [selectDatas, setSelectDatas] = useState([])
 
-    const [, updateState] = React.useState();
-    const forceUpdate = React.useCallback(() => updateState({}), []);
+
     const [data, setData] = useState([])
     const [count, setCount] = useState(0)
     const [pageCount, setPageCount] = useState(0)
@@ -40,7 +38,7 @@ const UsersPage = () => {
     const [globalFilter, setGlobalFilter] = useState("")
 
 
-    const [loading, setLoading] = useState(false)
+    const [loadingData, setLoadingData] = useState(true)
     const fetchIdRef = React.useRef(0)
 
     const { userRoles, isLoading, isError } = useUserRoles()
@@ -100,7 +98,8 @@ const UsersPage = () => {
         pageIndex,
         sortBy,
         globalFilter,
-        filters
+        filters,
+
     }) => {
         setPageSize(pageSize)
         setPageIndex(pageIndex)
@@ -110,11 +109,15 @@ const UsersPage = () => {
 
     }, [])
 
+    useEffect(() => {
+        const clearMode = (!filters.length && !globalFilter) ? true : false;
+        if (clearMode) applyFilters()
+    }, [filters, globalFilter])
 
-    useEffect(  () => {
-        let isMounted = true; 
-         applyFilters();
-         return () => { isMounted = false };
+    useEffect(() => {
+        let isMounted = true;
+        if (isMounted) applyFilters();
+        return () => { isMounted = false };
     }, [pageSize, pageIndex, sortBy])
 
 
@@ -123,6 +126,8 @@ const UsersPage = () => {
         const fetchId = ++fetchIdRef.current
 
         if (fetchId === fetchIdRef.current) {
+
+            setLoadingData(true)
             const startRow = pageIndex * pageSize;
 
             const globalFilterValue = columns.filter(item => !item.disableFilters).map(({ accessor }) => ({
@@ -145,27 +150,22 @@ const UsersPage = () => {
                 }
             })
 
+            //add condition to check is it filtering or not
+            const searchingMode = (filterValues.length || globalFilter) ? true : false;
 
-            try {
-                //setLoading(true)
-                const { users, count } = await fetcher(
-                    `/api/users?row=${startRow}
+            const { users, count } = await fetcher(
+                //reset row to 0 if this search mode
+                `/api/users?row=${searchingMode ? 0 : startRow}
                     &limit=${pageSize}
                     &filter=${filterValues.length && JSON.stringify(filterValues) || null}
                     &sort=${JSON.stringify(sort)}
                     &global=${globalFilter && JSON.stringify(globalFilterValue) || null}`)
 
-                setData(users)
-                setCount(count)
-                setPageCount(Math.ceil(count / pageSize))
 
-            } catch (error) {
-                console.log(error)
-            } finally {
-                //setLoading(false)
-            }
-
-
+            setData(users)
+            setCount(count)
+            setPageCount(Math.ceil(count / pageSize))
+            setLoadingData(false)
         }
     }
 
@@ -197,10 +197,7 @@ const UsersPage = () => {
         setSelectDatas(selectedItems)
     }
 
-
-
-
-    if (loading) return <SkeletonTableData />
+    // if (loadingData) return <SkeletonTableData />
 
     return (
         <>
@@ -209,9 +206,9 @@ const UsersPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Header title="Users" items={items} />
-            <ModalDeleteBulk opened={deleteBulkOpened} setOpened={setDeleteBulkOpened} data={selectDatas} mutate={forceUpdate} />
-            <ModalDelete opened={deleteOpened} setOpened={setDeleteOpened} data={selectData} mutate={forceUpdate} />
-            <ModalUserForm opened={opened} setOpened={setOpened} data={selectData} mutate={forceUpdate} />
+            <ModalDeleteBulk opened={deleteBulkOpened} setOpened={setDeleteBulkOpened} data={selectDatas} mutate={applyFilters} />
+            <ModalDelete opened={deleteOpened} setOpened={setDeleteOpened} data={selectData} mutate={applyFilters} />
+            <ModalUserForm opened={opened} setOpened={setOpened} data={selectData} mutate={applyFilters} />
             <div className="mt-10 bg-white  rounded-md px-6 py-6 text-xs">
                 <TableDataDynamic
                     columns={columns}
@@ -225,6 +222,7 @@ const UsersPage = () => {
                     manualPagination={true}
                     count={count}
                     applyFilters={applyFilters}
+                    loading={loadingData}
 
                 />
             </div>
