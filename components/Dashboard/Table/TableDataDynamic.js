@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import { useTable, useSortBy, useFilters, useGlobalFilter, useAsyncDebounce, usePagination, useRowSelect } from 'react-table'
 import { Group, Table, Input, Text, Button, Popover, Stack, InputWrapper, TextInput, MultiSelect, Checkbox, Pagination, Select, Avatar, ActionIcon } from '@mantine/core'
 import { ArrowsSort, SortAscending, SortDescending, Search, Filter, NewSection, Trash, Edit } from 'tabler-icons-react'
 import { matchSorter } from 'match-sorter';
 import { useMediaQuery } from '@mantine/hooks';
+import { SkeletonTableData } from '../Skeleton';
 
 
 const GlobalFilter = ({
     globalFilter,
     setGlobalFilter,
-    count
+    count,
+
 }) => {
     const onChange = useAsyncDebounce(value => {
         setGlobalFilter(value || "")
-    }, 100)
+    }, 50)
+
+
     return (
         <Group>
 
@@ -59,7 +63,7 @@ const DefaultColumnFilter = ({ column: { Header, filterValue, preFilteredRows, s
 
     const onChange = useAsyncDebounce(value => {
         setFilter(value || undefined)
-    }, 100)
+    }, 50)
 
     return (
 
@@ -67,6 +71,7 @@ const DefaultColumnFilter = ({ column: { Header, filterValue, preFilteredRows, s
             label={Header}
             value={filterValue || ''}
             onChange={e => {
+
                 onChange(e.target.value || undefined) // Set undefined to remove the filter entirely
             }}
             placeholder={`Search records...`}
@@ -136,6 +141,7 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = val => !val
 
 
+
 export const TableDataDynamic = ({
     columns,
     data,
@@ -146,10 +152,12 @@ export const TableDataDynamic = ({
     fetchData,
     pageCount: controlledPageCount,
     count,
-    applyFilters
+    applyFilters,
+    loading
 
 }) => {
     const [opened, setOpened] = useState(false)
+
 
     const isMobile = useMediaQuery('(max-width: 755px');
     const filterTypes = React.useMemo(
@@ -222,7 +230,7 @@ export const TableDataDynamic = ({
         manualSortBy: true,
         manualGlobalFilter: true,
         manualFilters: true,
-        // autoResetFilters: false
+        //autoResetFilters: false
 
 
     },
@@ -285,8 +293,12 @@ export const TableDataDynamic = ({
         fetchData({ pageIndex, pageSize, sortBy, globalFilter, filters })
     }, [fetchData, pageIndex, pageSize, sortBy, globalFilter, filters])
 
+
+
+
     const selectedItems = selectedFlatRows.map((item) => item.original)
 
+    if (loading) return <SkeletonTableData />
     // Render the UI for your table
     return (
         <div>
@@ -307,17 +319,17 @@ export const TableDataDynamic = ({
                         applyFilters={applyFilters}
                     />
                     <Button
-                    color="blue"
+                        color="blue"
                         onClick={() => {
-                            console.log(globalFilter)
                             setGlobalFilter("")
                             setAllFilters([])
-                            applyFilters()
-
                         }}
                         variant="default">Clear</Button>
                     <Button color="blue" onClick={() => {
+                        //reset page Index first
+
                         applyFilters()
+
                     }} variant="filled">Apply</Button>
                 </Group>
                 <Group>
@@ -405,7 +417,9 @@ export const TableDataDynamic = ({
                     page={pageIndex + 1}
                     onChange={(page) => {
                         // console.log(page)
+                        //setLoadingData(true)
                         gotoPage(page - 1)
+
                     }}
                     color="blue"
                     total={pageCount}
