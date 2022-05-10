@@ -99,7 +99,7 @@ export default function NavigationNested({ hidden }) {
         name,
         slug,
         ...(subMenus.length > 0 && { subMenu: subMenus}),
-        icon: iconList[iconName]
+        icon: iconList[iconName] || iconList["folder"]
     })) 
 
 

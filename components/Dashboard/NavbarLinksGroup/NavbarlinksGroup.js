@@ -44,7 +44,7 @@ const useStyles = createStyles((theme) => ({
 
 
 
-export function LinksGroup({ icon: Icon, name,slug, initiallyOpened, subMenu }) {
+export function LinksGroup({ icon: Icon , name,slug, initiallyOpened, subMenu }) {
     const { classes, theme } = useStyles();
     const hasLinks = Array.isArray(subMenu);
     // console.log(hasLinks)
@@ -75,7 +75,7 @@ export function LinksGroup({ icon: Icon, name,slug, initiallyOpened, subMenu }) 
                     <Link href={slug} >
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <ThemeIcon variant="light" size={30}>
-                        <Icon size={18} />
+                        {Icon && <Icon size={18} />}
                     </ThemeIcon>
                     <Box ml="md">{name}</Box>
                     </Box>
@@ -83,7 +83,7 @@ export function LinksGroup({ icon: Icon, name,slug, initiallyOpened, subMenu }) 
                     :
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <ThemeIcon variant="light" size={30}>
-                        <Icon size={18} />
+                        {Icon && <Icon size={18} />}
                     </ThemeIcon>
                     <Box ml="md">{name}</Box>
                     </Box>
