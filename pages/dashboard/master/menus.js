@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Header } from "@/components/Dashboard/Layout"
 import { TableData } from "@/components/Dashboard/Table/TableData";
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import ModalUserForm from "@/page-components/Dashboard/master/menus/ModalForm";
 import ModalDelete from "@/page-components/Dashboard/master/menus/ModalDelete";
@@ -9,6 +9,8 @@ import ModalDeleteBulk from "@/page-components/Dashboard/master/menus/ModalDelet
 
 import { Badge } from "@mantine/core";
 import { useMenus } from '@/lib/menus'
+import { useUserRoles } from "@/lib/users";
+import { MultiSelectColumnFilter } from "@/components/Dashboard/Table/TableData";
 
 
 const MenusPage = () => {
@@ -28,6 +30,7 @@ const MenusPage = () => {
     ]
 
     const  { menus, isLoading, isError, mutate} = useMenus()
+    const { userRoles } = useUserRoles()
   
     const columns = React.useMemo(
         () => [
@@ -61,7 +64,10 @@ const MenusPage = () => {
                     return value.map(({userRoleCode})=>{
                        return <Badge key={userRoleCode} color="blue" ml="xs" variant="outline">{userRoleCode}</Badge>;
                     }) 
-                }
+                },
+                Filter: MultiSelectColumnFilter,
+                filter: "includesSome",
+                options: userRoles.map(({ code, name }) => ({ label: name, value: code }))
 
             },
  

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTable, useSortBy, useFilters, useGlobalFilter, useAsyncDebounce, usePagination, useRowSelect } from 'react-table'
-import { Group, Table, Input, Text, Button, Popover, Stack, InputWrapper, TextInput, MultiSelect, Checkbox, Pagination, Select, Avatar, ActionIcon } from '@mantine/core'
+import { Group, Table, Input, Text, Button, Popover, Stack, InputWrapper, TextInput, MultiSelect, Checkbox, Pagination, Select, Avatar, ActionIcon, Grid } from '@mantine/core'
 import { ArrowsSort, SortAscending, SortDescending, Search, Filter, NewSection, Trash, Edit } from 'tabler-icons-react'
 import { matchSorter } from 'match-sorter';
 import { useMediaQuery } from '@mantine/hooks';
@@ -78,26 +78,12 @@ const DefaultColumnFilter = ({ column: { Header, filterValue, preFilteredRows, s
     )
 }
 
-export const MultiSelectColumnFilter = ({ column: { Header, filterValue, preFilteredRows, setFilter, id } }) => {
-    const count = preFilteredRows.length
-    //console.log(preFilteredRows)
-    // using the preFilteredRows    
+export const MultiSelectColumnFilter = ({ column: { Header, filterValue, setFilter, id, options } }) => {
     const data = React.useMemo(() => {
-        const options = []
-        preFilteredRows.forEach(row => {
-            //check if the data already exist, if exist skip
-            if (options.filter(function (e) { return e.value === row.values[id]; }).length > 0) {
-
-            } else {
-                options.push({ label: row.values[id], value: row.values[id] })
-            }
-        })
-
-        return [...options.values()]
-    }, [id, preFilteredRows])
+        return options
+    }, [id, filterValue])
 
     return (
-
         <MultiSelect
             withinPortal={true}
             label={Header}
@@ -108,8 +94,24 @@ export const MultiSelectColumnFilter = ({ column: { Header, filterValue, preFilt
                 setFilter(e)
             }}
         />
-
     )
+}
+
+const FilterFormGrid = ({ headerGroups, opened, setOpened, isMobile }) => {
+
+    const items = headerGroups.map(headerGroup =>
+        headerGroup.headers.filter(column => column.canFilter).map(column => {
+            return <Grid.Col key={column.id} md={6} lg={3}>
+                {column.render("Filter")}
+            </Grid.Col>
+        }
+        ));
+
+    return (
+        <Grid>
+            {items}
+        </Grid>
+    );
 }
 
 const FilterForm = ({ headerGroups, opened, setOpened, isMobile }) => {
@@ -333,6 +335,9 @@ export const TableData = ({
 
 
                 </Group>
+            </Group>
+            <Group mb={40}>
+                    <FilterFormGrid headerGroups={headerGroups}/>
             </Group>
             <div className='overflow-x-auto'>
                 <Table {...getTableProps()}>
