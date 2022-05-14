@@ -114,7 +114,7 @@ const Slider = () => {
 
 }
 
-export const Login = ({ csrfToken }) => {
+export const Register = ({ csrfToken }) => {
 
     const [loading, setLoading] = useState(false)
     const { data: session, status } = useSession()
@@ -123,37 +123,49 @@ export const Login = ({ csrfToken }) => {
     const route = useRouter()
 
     const schema = z.object({
+        name: ValidateSchema.user.name,
         email: ValidateSchema.user.email,
-        password: ValidateSchema.user.password
-    })
+        password: ValidateSchema.user.password,
+        confirmPassword: ValidateSchema.user.confirmPassword,
+
+    }).refine((data) =>
+        data.password === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ["confirmPassword"], // path of error
+    }
+    )
 
     const form = useForm({
         schema: zodResolver(schema),
         initialValues: {
             email: '',
             password: '',
-        },
+        }
 
     });
 
 
-    const handleSubmit = async (credentials) => {
+    const handleSubmit = async (data) => {
         setLoading(true)
-        let extendCredentials = credentials;
-        extendCredentials.csrfToken = csrfToken
+        // let extendCredentials = credentials;
+        // extendCredentials.csrfToken = csrfToken
 
-        const response = await fetch("/api/auth/callback/credentials", {
+        const response = await fetch("/api/auth/register", {
             method: "POST",
-            body: JSON.stringify(extendCredentials),
+            body: JSON.stringify(data),
             headers: { "Content-Type": "application/json" }
         })
 
-        if (response.url.includes("error")) {
-            notif(false, "Login Fail", "Incorect email or password!")
+        const { success, error } = await response.json();
+  
+        if (!success) {
+     
+            notif(false, "Register Fail", error)
 
         } else {
-            notif(true, "Login Success", "")
-            route.reload(window.location.pathname)
+            notif(true, "Register Success", "")
+            route.replace("/login")
+
         }
 
         setLoading(false)
@@ -181,9 +193,15 @@ export const Login = ({ csrfToken }) => {
                                 <h1 className="text-lg font-bold ">Payroll<span className="text-blue-800">Kita</span></h1>
                             </div>
                             <div className="flex flex-col gap-5 w-96">
-                                <h1 className="text-3xl">Login</h1>
-                                <p className="text-base text-gray-500">Welcome back! please enter your details</p>
+                                <h1 className="text-3xl">Register</h1>
+                                <p className="text-base text-gray-500">Welcome! please enter your details</p>
                                 <form onSubmit={form.onSubmit(handleSubmit)} className="flex flex-col gap-2" id="login-form">
+                                    <TextInput
+                                        id="name"
+                                        label="Name"
+                                        placeholder="Name"
+                                        {...form.getInputProps('name')}
+                                        required />
                                     <TextInput
                                         id="email"
                                         label="Email"
@@ -198,16 +216,21 @@ export const Login = ({ csrfToken }) => {
                                         placeholder="Password"
                                         {...form.getInputProps('password')}
                                         required />
+                                    <TextInput
+                                        type="password"
+                                        id="confirmPassword"
+                                        label="Password"
+                                        placeholder="Confirm Password"
+                                        {...form.getInputProps('confirmPassword')}
+                                        required />
 
-                                    <Grid justify="flex-end" align="center" style={{ marginBottom: 6, padding: 8 }}>
-                                        <a className="text-xs font-bold text-blue-800 hover:text-blue-900" href="#">Forgot Password</a>
-                                    </Grid>
-                                    <Button loading={loading} type="submit" >Login</Button>
+
+                                    <Button loading={loading} mt="md" type="submit" >Register</Button>
                                     <Center style={{ marginTop: 6, padding: 8 }}>
-                                        <p className="text-xs">Don't have an Account? &nbsp;
-                                        <Link href="/register" passHref>
-                                        <a className="font-bold text-blue-800 hover:text-blue-900" >Register</a>
-                                        </Link>
+                                        <p className="text-xs">have an Account? &nbsp;
+                                            <Link passHref href="/login">
+                                                <a className="font-bold text-blue-800 hover:text-blue-900" >Login</a>
+                                            </Link>
                                         </p>
                                     </Center>
                                 </form>

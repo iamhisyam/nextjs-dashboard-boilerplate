@@ -57,7 +57,7 @@ export const createUser =
             data: {
                 name,
                 email,
-                userRoleCode,
+                ...(userRoleCode && { userRoleCode: userRoleCode } || { userRoleCode: "member" }  ),
                 ...(password && { password: hashPassword })
             }
         })

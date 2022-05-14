@@ -18,6 +18,7 @@ handler.post(
             name: ValidateSchema.user.name,
             email: ValidateSchema.user.email,
             password: ValidateSchema.user.password,
+            confirmPassword: ValidateSchema.user.confirmPassword
         })
             // enable strict
             .strict()
