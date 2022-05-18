@@ -2,7 +2,7 @@ import { Register } from "@/page-components/Auth"
 import Head from "next/head"
 import { getCsrfToken } from "next-auth/react"
 
-const LoginPage = ({ csrfToken }) => {
+const RegisterPage = ({ csrfToken }) => {
     return (
         <div>
             <Head>
@@ -16,7 +16,7 @@ const LoginPage = ({ csrfToken }) => {
 
 }
 
-export default LoginPage
+export default RegisterPage
 
 export async function getServerSideProps(ctx) {
     return {
@@ -27,6 +27,6 @@ export async function getServerSideProps(ctx) {
 
 }
 
-LoginPage.getLayout = function getLayout(page) {
+RegisterPage.getLayout = function getLayout(page) {
     return <div>{page}</div>;
 };

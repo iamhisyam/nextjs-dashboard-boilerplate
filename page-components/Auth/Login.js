@@ -200,7 +200,10 @@ export const Login = ({ csrfToken }) => {
                                         required />
 
                                     <Grid justify="flex-end" align="center" style={{ marginBottom: 6, padding: 8 }}>
-                                        <a className="text-xs font-bold text-blue-800 hover:text-blue-900" href="#">Forgot Password</a>
+                                        <Link href="/forgot-password" passHref>
+                                        <a className="text-xs font-bold text-blue-800 hover:text-blue-900" >Forgot Password</a>
+                                        </Link>
+                                        
                                     </Grid>
                                     <Button loading={loading} type="submit" >Login</Button>
                                     <Center style={{ marginTop: 6, padding: 8 }}>

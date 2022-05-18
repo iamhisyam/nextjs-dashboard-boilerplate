@@ -94,6 +94,28 @@ export const updateUser =
 
 }
 
+export const updateUserPassword =
+    async (db,
+        {
+            id,
+            password
+        }) => {
+
+        let hashPassword = password && await bcrypt.hash(password, 10);
+
+        const user = await db.user.update({
+            where: {
+                id
+            },
+            data: {
+                ...(password && { password: hashPassword })
+            }
+        })
+
+        return user;
+
+}
+
 export const deleteUserById = async (
     db,
     id
