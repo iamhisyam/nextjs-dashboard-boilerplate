@@ -3,9 +3,11 @@ import GithubProvider from "next-auth/providers/github"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { fetcher } from "@/lib/fetch"
 
 
 const prisma = new PrismaClient()
+
 
 
 export default NextAuth({
@@ -58,21 +60,31 @@ export default NextAuth({
                 // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
                 // You can also use the `req` object to obtain additional parameters
                 // (i.e., the request IP address)
-                const res = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+                const resp = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
                     method: 'POST',
                     body: JSON.stringify(credentials),
                     headers: { "Content-Type": "application/json" }
                 })
-                
-                const resp = await res.json()
-               
-                if(!resp) return null
-                const { data: { user } } = resp
+
+                const res = await resp.json()
+                // console.log(res)
+                // return res
+                if(!res.success) return null
+                // console.log(resp)
+                const { data: { user } } = res
                 
                 // If no error and we have user data, return it
-                if (res.ok && user) {
-                    return user
+                if (user) {
+                    return user;
+
+                    // if(user.verified)
+                    //     return user
+                    // else
+                    //     throw new Error("NotVerified")
+
                 }
+
+                
                 // Return null if user data could not be retrieved
                 return null
             }
@@ -86,6 +98,7 @@ export default NextAuth({
 
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
+            console.log(user)
           return true
         },
         async redirect({ url, baseUrl }) {

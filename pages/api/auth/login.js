@@ -19,7 +19,7 @@ handler.post(
             csrfToken: z.string().optional()
         })
             // enable strict
-            .strict()
+            //.strict()
     ),
     async (req, res) => {
 
@@ -28,8 +28,16 @@ handler.post(
 
         const user = await findUserByEmailAndPassword(req.db, email, password);
 
-        if (user) {
+        if (user ) {
             delete user.password
+
+            // if (!user.verified) {
+            //     res.status(400).json({
+            //         success: false, error: "User not verified yet"
+            //     })
+            //     return;
+            // } 
+
             res.json({
                 success: true, data: {
                     user
@@ -39,10 +47,9 @@ handler.post(
 
         } else {
 
-            res.json({
-                success: true, data: {
-                    message: "Cannot find"
-                }
+            res.status(400).json({
+                success: false, error: "Cannot find user"
+
             })
             return;
 

@@ -66,6 +66,29 @@ export const createUser =
 
     }
 
+    export const verifyUser =
+    async (db,
+        {
+            id,
+
+        }) => {
+
+
+        const user = await db.user.update({
+            where: {
+                id
+            },
+            data: {
+                //milis
+                verifiedAt : Date.now(),
+                verified: true
+            }
+        })
+
+        return user;
+
+}
+
 export const updateUser =
     async (db,
         {
@@ -83,9 +106,9 @@ export const updateUser =
                 id
             },
             data: {
-                name,
-                email,
-                userRoleCode,
+                ...(name && { name }),
+                ...(email && { email }),
+                ...(userRoleCode && { userRoleCode }),
                 ...(password && { password: hashPassword })
             }
         })

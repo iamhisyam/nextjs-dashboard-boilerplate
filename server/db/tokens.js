@@ -23,8 +23,7 @@ export async function findAndDeleteTokenByIdAndType(db, id, type) {
 
 
   if(!token) return null;
-  const  deleteToken = await db.token
-    .delete({
+  const  deleteToken = await db.token.delete({
       where: { id:token.id },
     });
 

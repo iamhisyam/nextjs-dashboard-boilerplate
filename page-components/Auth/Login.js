@@ -1,15 +1,21 @@
 import { useSpringCarousel } from "react-spring-carousel"
 import { useEffect, useState } from "react";
-import { TextInput, Checkbox, Grid, Center, Button } from "@mantine/core";
+import { TextInput, Checkbox, Grid, Center, Button, Alert } from "@mantine/core";
 import { useForm, zodResolver } from '@mantine/form';
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { DotsLoader } from "@/components/Dashboard/Loaders";
 import { notif } from "@/lib/notification";
 import { z } from 'zod';
 import { ValidateSchema } from "shared/constants";
 import Link from "next/link";
+import { fetcher } from "@/lib/fetch";
+import { AlertCircle, Refresh } from "tabler-icons-react";
 
+const errorMessages = {
+    NotVerified: "User not verified",
+    CredentialsSignin: "User or password wrong"
+}
 
 
 
@@ -117,6 +123,7 @@ const Slider = () => {
 export const Login = ({ csrfToken }) => {
 
     const [loading, setLoading] = useState(false)
+    const [needVerification, setNeedVerification] = useState(false)
     const { data: session, status } = useSession()
 
 
@@ -136,24 +143,41 @@ export const Login = ({ csrfToken }) => {
 
     });
 
+    const sendVerificationEmail = async () => {
+        setLoading(true)
+        const { email } = form.values
+        const response = await fetcher("/api/auth/verify",{
+            method: "POST",
+            body: JSON.stringify({email}),
+            headers: { "Content-Type": "application/json" }
+            
+        })
+        //reset
+        setNeedVerification(false)
+        setLoading(false)
+    }
+
 
     const handleSubmit = async (credentials) => {
         setLoading(true)
         let extendCredentials = credentials;
         extendCredentials.csrfToken = csrfToken
 
-        const response = await fetch("/api/auth/callback/credentials", {
-            method: "POST",
-            body: JSON.stringify(extendCredentials),
-            headers: { "Content-Type": "application/json" }
-        })
+        try {
+            const response = await signIn('credentials', {
+                redirect: false,
+                ...credentials
+            })
+            const { error } = response
+            if (error) {
+                if (error === "NotVerified")
+                    setNeedVerification(true)
+                throw error
+            }
+            notif(true, "Login Success")
 
-        if (response.url.includes("error")) {
-            notif(false, "Login Fail", "Incorect email or password!")
-
-        } else {
-            notif(true, "Login Success", "")
-            route.reload(window.location.pathname)
+        } catch (error) {
+            notif(false, "Login Fail", errorMessages[error])
         }
 
         setLoading(false)
@@ -181,7 +205,14 @@ export const Login = ({ csrfToken }) => {
                                 <h1 className="text-lg font-bold ">Payroll<span className="text-blue-800">Kita</span></h1>
                             </div>
                             <div className="flex flex-col gap-5 w-96">
+                               
                                 <h1 className="text-3xl">Login</h1>
+                                {needVerification && <Alert icon={<AlertCircle size={16} />} title="Not Verified" color="orange">
+                                    We have sent you a link to verify 
+                                    <Button
+                                    onClick={sendVerificationEmail}
+                                     mt="md" variant="subtle" leftIcon={<Refresh/>} compact>resend email</Button> 
+                                </Alert>}
                                 <p className="text-base text-gray-500">Welcome back! please enter your details</p>
                                 <form onSubmit={form.onSubmit(handleSubmit)} className="flex flex-col gap-2" id="login-form">
                                     <TextInput
@@ -201,16 +232,16 @@ export const Login = ({ csrfToken }) => {
 
                                     <Grid justify="flex-end" align="center" style={{ marginBottom: 6, padding: 8 }}>
                                         <Link href="/forgot-password" passHref>
-                                        <a className="text-xs font-bold text-blue-800 hover:text-blue-900" >Forgot Password</a>
+                                            <a className="text-xs font-bold text-blue-800 hover:text-blue-900" >Forgot Password</a>
                                         </Link>
-                                        
+
                                     </Grid>
                                     <Button loading={loading} type="submit" >Login</Button>
                                     <Center style={{ marginTop: 6, padding: 8 }}>
                                         <p className="text-xs">Don't have an Account? &nbsp;
-                                        <Link href="/register" passHref>
-                                        <a className="font-bold text-blue-800 hover:text-blue-900" >Register</a>
-                                        </Link>
+                                            <Link href="/register" passHref>
+                                                <a className="font-bold text-blue-800 hover:text-blue-900" >Register</a>
+                                            </Link>
                                         </p>
                                     </Center>
                                 </form>
