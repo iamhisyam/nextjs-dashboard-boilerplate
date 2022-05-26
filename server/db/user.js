@@ -95,6 +95,7 @@ export const updateUser =
             id,
             name,
             email,
+            bio,
             userRoleCode,
             password
         }) => {
@@ -107,6 +108,7 @@ export const updateUser =
             },
             data: {
                 ...(name && { name }),
+                ...(bio && { bio }),
                 ...(email && { email }),
                 ...(userRoleCode && { userRoleCode }),
                 ...(password && { password: hashPassword })

@@ -53,6 +53,8 @@ model User {
   verifiedAt BigInt?
   verified   Boolean   @default(false)
   image      String?
+  bio        String?
+  imageUrl   String?
   password   String?   @db.Text
   accounts   Account[]
   sessions   Session[]

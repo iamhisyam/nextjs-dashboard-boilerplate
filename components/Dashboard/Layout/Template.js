@@ -1,12 +1,12 @@
 import Head from "next/head";
 import Main from "./Main";
+import { cloneElement } from "react";
 
 import authenticateRoute from "@/routes/authenticateRoute";
 
 
 
-const Template = ({ children }) => {
-
+const Template = ({ children, user }) => {
     return (
         <>
             <Head>
@@ -24,7 +24,7 @@ const Template = ({ children }) => {
                 />
             </Head>
             <Main>
-                {children}
+                {cloneElement(children, { user })}
             </Main>
 
         </>

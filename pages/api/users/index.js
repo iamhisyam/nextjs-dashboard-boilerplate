@@ -75,20 +75,22 @@ handler.patch(
     validation(
         z.object({
             id: ValidateSchema.user.id,
-            name: ValidateSchema.user.name,
-            email: ValidateSchema.user.email,
+            name: ValidateSchema.user.name.optional(),
+            email: ValidateSchema.user.email.optional(),
+            bio: ValidateSchema.user.bio.optional(),
             password: ValidateSchema.user.password.optional(),
-            userRoleCode: ValidateSchema.user.userRoleCode,
+            userRoleCode: ValidateSchema.user.userRoleCode.optional(),
         })
             // enable strict
             .strict()
     ),
     async (req, res) => {
 
-        const { name, email, id, userRoleCode } = req.body
+        const { name, email, id, userRoleCode, bio } = req.body
 
-        const user = await updateUser(req.db, { name, email, id, userRoleCode })
-
+        const user = await updateUser(req.db, { name, email, id, userRoleCode, bio })
+        //fix for bigInt parsing to JSON
+        user.verifiedAt = user.verifiedAt.toString()
 
         res.status(201).json({
             success: true, data: {

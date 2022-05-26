@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, cloneElement } from 'react';
 import {
     AppShell,
     Navbar,

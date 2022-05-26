@@ -1,5 +1,5 @@
 import '../assets/global.css'
-
+import {createContext} from 'react'
 import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
 import { Template } from '@/components/Dashboard/Layout';

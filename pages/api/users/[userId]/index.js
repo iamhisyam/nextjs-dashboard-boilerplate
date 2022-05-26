@@ -11,6 +11,10 @@ handler.get(async(req,res)=>{
     const userId = req.query.userId
     const user = await findUserById(req.db, userId);
 
+    //fix for bigInt parsing to JSON
+    user.verifiedAt = user.verifiedAt.toString()
+    delete user.password
+
     res.status(201).json({
         success: true, data: {
             user

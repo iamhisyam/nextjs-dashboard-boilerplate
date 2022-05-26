@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 const VerifyPage = () => {
     const [loading, setLoading] = useState(false)
     const { data: session, status } = useSession()
-    console.log(session)
+
 
     const sendVerificationEmail = async (email) => {
         setLoading(true)

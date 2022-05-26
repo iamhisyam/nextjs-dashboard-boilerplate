@@ -1,6 +1,7 @@
 import { Menu, Divider, Text, Avatar, useMantineTheme } from '@mantine/core';
 import { Settings, Search, Photo, MessageCircle, Trash, ArrowsLeftRight, Logout } from 'tabler-icons-react';
 import { useSession, signOut  } from 'next-auth/react';
+import Link from 'next/link';
 
 const ProfileMenu = ({children}) => {
  
@@ -9,7 +10,11 @@ const { data :  session, status } = useSession()
     return (
       <Menu control={children}>
         <Menu.Label>{session?.user?.name}</Menu.Label>
-        <Menu.Item icon={<Settings size={14} />}>Profile</Menu.Item>
+        <Menu.Item icon={<Settings size={14} />}>
+          <Link href="/dashboard/account">
+            Account
+          </Link>
+        </Menu.Item>
       
   
         <Divider />
