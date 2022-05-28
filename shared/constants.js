@@ -10,7 +10,8 @@ export const ValidateSchema = {
         id: z.string().nonempty(1,{message:"Missing Id"}),
         userRoleCode: z.string().nonempty(1,{message:"Missing userRoleCode"}),
         ids: z.string().array().nonempty(1,{message:"Missing Id"}),
-        bio: z.string()
+        bio: z.string(),
+        imageUrl: z.string(),
     },
     menu: {
        

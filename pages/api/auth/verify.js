@@ -7,7 +7,7 @@ import { ValidateSchema } from 'shared/constants'
 import validation from '@/server/middlewares/validation'
 import { z } from 'zod'
 import { createToken, createUser, findUserByEmail } from '@/server/db'
-import { sendEmailWithTemplate } from '@/lib/mailersend'
+import { sendEmailWithTemplate } from 'lib-services/mailersend'
 
 const handler = nc(ncOptions);
 

@@ -5,7 +5,7 @@ import { findUserByEmailAndPassword, findUserByEmail, createToken, findAndDelete
 import validation from '@/server/middlewares/validation';
 import { ValidateSchema } from 'shared/constants';
 import { z } from 'zod';
-import { sendEmailWithTemplate } from '@/lib/mailersend';
+import { sendEmailWithTemplate } from 'lib-services/mailersend';
 
 
 const handler = nc(ncOptions);

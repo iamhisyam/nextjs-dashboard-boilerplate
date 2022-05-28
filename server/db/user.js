@@ -97,7 +97,8 @@ export const updateUser =
             email,
             bio,
             userRoleCode,
-            password
+            password,
+            imageUrl
         }) => {
 
         let hashPassword = password && await bcrypt.hash(password, 10);
@@ -111,6 +112,7 @@ export const updateUser =
                 ...(bio && { bio }),
                 ...(email && { email }),
                 ...(userRoleCode && { userRoleCode }),
+                ...(imageUrl && { imageUrl }),
                 ...(password && { password: hashPassword })
             }
         })

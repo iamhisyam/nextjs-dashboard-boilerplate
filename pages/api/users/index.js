@@ -80,6 +80,7 @@ handler.patch(
             bio: ValidateSchema.user.bio.optional(),
             password: ValidateSchema.user.password.optional(),
             userRoleCode: ValidateSchema.user.userRoleCode.optional(),
+            imageUrl: ValidateSchema.user.imageUrl.optional(),
         })
             // enable strict
             .strict()
@@ -88,7 +89,7 @@ handler.patch(
 
         const { name, email, id, userRoleCode, bio } = req.body
 
-        const user = await updateUser(req.db, { name, email, id, userRoleCode, bio })
+        const user = await updateUser(req.db, { name, email, id, userRoleCode, bio, imageUrl })
         //fix for bigInt parsing to JSON
         user.verifiedAt = user.verifiedAt.toString()
 

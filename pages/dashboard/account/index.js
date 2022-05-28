@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import Head from "next/head"
 import { Header } from "@/components/Dashboard/Layout"
-import { Avatar, Badge, Blockquote, Box, Button, Grid, Group, Stack, Table, Tabs, Text, Textarea, TextInput, ThemeIcon, Title } from "@mantine/core"
+import { Avatar, Badge, Blockquote, Box, Button, Grid, Group, Image, Input, Stack, Table, Tabs, Text, Textarea, TextInput, ThemeIcon, Title, useMantineTheme } from "@mantine/core"
 import { Message, Message2 } from "tabler-icons-react"
 import { useForm, zodResolver } from '@mantine/form'
 import { z } from 'zod'
@@ -9,11 +9,18 @@ import { ValidateSchema } from '@/shared/constants'
 import { fetcher } from '@/lib/fetch'
 import { notif } from '@/lib/notification'
 import { useUser } from '@/lib/users'
+import { DropArea } from '@/components/Dashboard/Upload'
+import { Image as NextImage } from 'next/image'
+import { imageKitLoader } from '@/lib/imageLoader'
+
+
 
 const AccountPage = ({ user }) => {
 
     const [loading, setLoading] = useState(false)
+    const [avatarFile, setAvatarFile] = useState()
     const [edit, setEdit] = useState(false)
+    const [editAvatar, setEditAvatar] = useState(false)
     const items = [
         { title: " Dashboard", href: "#" },
         { title: " Index", href: "#" },
@@ -118,7 +125,50 @@ const AccountPage = ({ user }) => {
         setLoading(false)
     }
 
+    const onDrop = useCallback(acceptedFiles => {
+        console.log("test")
+        // Do something with the files
+        setAvatarFile(acceptedFiles[0])
+        console.log(acceptedFiles[0])
+    }, [])
 
+
+    const onUpdateAvatar = async () => {
+        setLoading(true)
+
+        if(!avatarFile){
+            notif(false,"file not found")
+            return
+        }
+
+        
+       
+        try {
+            const formData = new FormData();
+        
+            const userId = userData.id
+            formData.append('avatar',avatarFile,avatarFile.name)
+            formData.append('userId',userId)
+            const resp = await fetcher("/api/upload/avatar",{
+                method: "POST",
+                body: formData
+            })
+            setEditAvatar(false)
+            notif(true,"Avatar updated")
+            mutate()
+        } catch (error) {
+            if (Array.isArray(error)) {
+                error.forEach(({ fields, message: errorMessage }) => {
+                    notif(false, `Field ${fields.join()}`, errorMessage)
+                })
+            } else {
+                notif(false, `Password`, error)
+            }
+        }
+       
+        
+        setLoading(false)
+    }
 
     return (
         <>
@@ -129,7 +179,34 @@ const AccountPage = ({ user }) => {
             <Stack spacing="md" my={40}>
 
                 <Group align="flex-start" p="md" className="bg-white rounded-md">
-                    <Avatar size={150} src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=250&q=80" />
+
+
+
+                    <Stack spacing="0"
+                        sx={(theme) => ({
+                            maxWidth: 150,
+                            minHeight: 150
+                        })}
+                    >
+
+
+                        {editAvatar ?
+                            <DropArea onDropFile={onDrop} file={avatarFile} /> : 
+                            // <NextImage loader={imageKitLoader} src={userData.imageUrl} width={150} quality={50}/>
+                            <Image 
+                            
+                            withplaceholder="true" size={150}
+                                src={userData.imageUrl}
+                            />
+                        }
+                        <Button hidden={editAvatar} onClick={() => setEditAvatar(true)} variant='outline' color="blue" radius={0} size='xs'>change</Button>
+                        <Group>
+                        <Button mt="xs"  hidden={!editAvatar} onClick={() => setEditAvatar(false)} variant='outline' color="blue" radius={0} size='xs'>Cancel</Button>
+                        <Button mt="xs" hidden={!editAvatar} onClick={() => onUpdateAvatar()} variant='filled' color="green" radius={0} size='xs'>Save</Button>
+                        </Group>
+                        
+                    </Stack>
+
                     <Stack spacing="xs">
                         <Group>
                             <Title order={3} >{userData.name}</Title>
